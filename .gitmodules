@@ -1,0 +1,3 @@
+[submodule "rtos_core"]
+	path = rtos_core
+	url = git@github.com:FreeRTOS/FreeRTOS-Kernel.git
