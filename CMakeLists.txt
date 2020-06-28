@@ -4,3 +4,6 @@ project(RTOS_CPP_WRAPPER)
 
 # This is the root directory that builds the core library.
 add_subdirectory(rtos_cpp_wrappers)
+
+#Test directory for the unit tests.
+add_subdirectory(unit_test)
