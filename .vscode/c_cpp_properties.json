@@ -3,7 +3,11 @@
         {
             "name": "MinGW",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/rtos_c/rtos_core/include/**",
+                "${workspaceFolder}/rtos_c/rtos_core/portable/MSVC-MingW/**",
+                "${workspaceFolder}/rtos_c/config_file/**",
+                "${workspaceFolder}/rtos_cpp_wrappers/include/**"
             ],
             "defines": [],
             "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
