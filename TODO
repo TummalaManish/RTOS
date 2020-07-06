@@ -1,2 +1,3 @@
 TODO: 1 Have to add the name check for the thread name.
 TODO: 2 All the task block status have to be addeed here.
+☐ TODO: Have to make changes to the FreeRTOS kernel to enable suspended or silent task start. @started(20-07-06 23:38)
