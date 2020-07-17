@@ -8,6 +8,9 @@ include(useroptions.cmake)
 # This is the root directory that builds the core library.
 add_subdirectory(rtos_cpp_wrappers)
 
+#This the FreeRTOS kernel.
+add_subdirectory(rtos_c)
+
 #This is the library for the gtest.
 add_subdirectory(googletest)
 
