@@ -91,7 +91,7 @@ extern "C" {
 #define configUSE_TICK_HOOK						0
 #define configTICK_RATE_HZ						( 1000 ) 
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 50 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 23 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 24 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 12 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -106,23 +106,24 @@ extern "C" {
 #define configUSE_QUEUE_SETS					1
 #define configUSE_TASK_NOTIFICATIONS			1
 #define configSUPPORT_STATIC_ALLOCATION         1
+#define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Software timer related configuration options. */
-#define configUSE_TIMERS						1
+#define configUSE_TIMERS						0
 #define configTIMER_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH				20
 #define configTIMER_TASK_STACK_DEPTH			( configMINIMAL_STACK_SIZE * 2 )
 
 #define configMAX_PRIORITIES					( 7 )
 
-/* Run time stats gathering configuration options. */
-unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
-#define configGENERATE_RUN_TIME_STATS			1
-/* Make use of times(man 2) to gather run-time statistics on the tasks. */
-extern void vPortFindTicksPerSecond( void );
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vPortFindTicksPerSecond()
-extern unsigned long ulPortGetTimerValue( void );
-#define portGET_RUN_TIME_COUNTER_VALUE() ulPortGetTimerValue()
+///* Run time stats gathering configuration options. */
+//unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
+//#define configGENERATE_RUN_TIME_STATS			1
+///* Make use of times(man 2) to gather run-time statistics on the tasks. */
+//extern void vPortFindTicksPerSecond( void );
+//#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vPortFindTicksPerSecond()
+//extern unsigned long ulPortGetTimerValue( void );
+//#define portGET_RUN_TIME_COUNTER_VALUE() ulPortGetTimerValue()
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES 					1
