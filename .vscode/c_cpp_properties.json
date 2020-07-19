@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/rtos_c/rtos_core/include/",
                 "${workspaceFolder}/rtos_c/rtos_core/portable/MSVC-MingW/",
-                "${workspaceFolder}/rtos_c/config_file/",
+                "${workspaceFolder}/rtos_c/configuration/",
                 "${workspaceFolder}/rtos_cpp_wrappers/include/",
                 "${workspaceFolder}/rtos_cpp_wrappers/interface/",
                 "${workspaceFolder}/rtos_c/rtos_core/portable/MemMang/"
