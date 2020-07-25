@@ -105,7 +105,7 @@ namespace RTOS{
 
     Thread::~Thread() {
         vTaskDelete(m_pHandel);
-        if (m_ethreadType == eNonKillabe){
+        if (Thread::is_thread_killable()){
             //Memory for the task has been provided from the heap hence the clean up.
             MemoryManager::get_Instance().release_TCB(m_pTaskCb);
             MemoryManager::get_Instance().release_stack(m_pStack);

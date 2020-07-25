@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 include_directories(../rtos_c/rtos_core/include)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSIM=1")
+
 #Thread not yet implemented.
 add_library(obj_thread_win source/Thread.cpp)
 target_include_directories(obj_thread_win PUBLIC include interface)

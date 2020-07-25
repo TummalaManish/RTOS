@@ -71,7 +71,7 @@ namespace RTOS{
          *
          * @param   pMemHolder Pointer that holds the start address of the memory that has been allocated.
          */
-        void release_block(void* pMemHolder);
+        static void release_block(void* pMemHolder);
 
         /**
          * @brief   Allocates the stack for the thread.
@@ -96,7 +96,7 @@ namespace RTOS{
          * 
          * @param   ppStack pointer to the stack that has been assigned. 
          */
-        void release_stack(rtos_thread_stack_t ppStack);
+        static void release_stack(rtos_thread_stack_t ppStack);
 
         /**
          * @brief   Allocates the memory for the FreeRTOS control block.
@@ -115,6 +115,6 @@ namespace RTOS{
          * 
          * @param   ppStack pointer to the stack that has been assigned. 
          */
-        void release_TCB(rtos_thread_cb_t ppTCB);
+        static void release_TCB(rtos_thread_cb_t ppTCB);
     };
 }
