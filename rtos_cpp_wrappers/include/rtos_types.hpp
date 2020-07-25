@@ -43,17 +43,6 @@ namespace RTOS{
     using rtos_thread_name_t = const char *;
 
 /**
- * @brief Type used for the thread count.
- */
-#if configMaxPriorities <= 255
-    using rtos_thread_count_t = uint8_t;
-#elif configMaxPriorities <= 65535
-    using rtos_thread_count_t = uint16_t;
-#else
-    #error("RTOS: The port dose not suppot threads more than 65535!!")
-#endif //Closing rtos thread count type.
-
-/**
  * @brief Type used for the RTOS stack size.
  */
     using rtos_stack_size_t = configSTACK_DEPTH_TYPE;
@@ -72,6 +61,22 @@ namespace RTOS{
  * @brief Static TCB of the thread.
  */
     using rtos_thread_cb_t = StaticTask_t*;
+
+/**
+ * @brief Handel for the created thread.
+ */
+    using rtos_thread_handel_t = TaskHandle_t;
+
+/**
+ * @brief Type of the thread id.
+ */
+#if configMaxPriorities <= 255
+    using rtos_thread_id_t = uint8_t;
+#elif configMaxPriorities <= 65535
+    using rtos_thread_id_t = uint16_t;
+#else
+    #error("RTOS: The port dose not suppot threads more than 65535!!")
+#endif //Closing the RTOS thread id type.
 
 /**
  * @brief Type used to identify thread status.
@@ -114,7 +119,7 @@ namespace RTOS{
  *          the heap. Rather these are allocated on the stack.
  */
     enum rtos_thread_type_e {
-        eKillabe = 0,
+        eKillable = 0,
         eNonKillabe
     };
 

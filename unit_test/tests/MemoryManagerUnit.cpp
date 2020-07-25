@@ -29,6 +29,8 @@ TEST(MemoryManagerTestPositive, AllocatingStack){
 
 /*-------------- Positive Tests ----------------*/
 
+using namespace TEST;
+
 TEST(MemoryManagerTestPositive, AllocatingStack){
 
     RTOS::rtos_thread_stack_t stack;

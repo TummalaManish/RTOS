@@ -18,7 +18,7 @@ namespace RTOS{
     MemoryManager MemoryManager::m_rMemoryManager;
 
     MemoryManager::MemoryManager() {
-    /*TODO: This implementation can be improved to have booking if the memory.*/
+    /*TODO: This implementation can be improved to have book keeping of the memory.*/
     }
 
     MemoryManager& MemoryManager::get_Instance(){
@@ -62,8 +62,10 @@ namespace RTOS{
     }
 }
 
-//How the failed memory allocations have to be dealt with.
+//TODO: How the failed memory allocations have to be dealt with.
 extern "C" void vApplicationMallocFailedHook(void);
 void vApplicationMallocFailedHook(void){
+    //TODO: memory allocation fails have to the handled more appropiatly.
+    __debugbreak();
 }
 

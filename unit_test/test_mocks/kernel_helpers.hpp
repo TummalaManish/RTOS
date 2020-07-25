@@ -10,14 +10,4 @@ void vAssertCalled( unsigned long ulLine, const char * const pcFileName ){
     while(1);
 }
 
-
-extern "C" void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
-                                              StackType_t **ppxIdleTaskStackBuffer,
-                                              uint32_t *pulIdleTaskStackSize);
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
-                                    StackType_t **ppxIdleTaskStackBuffer,
-                                    uint32_t *pulIdleTaskStackSize){
-    //TODO: No memory allocation has to be done for the idle task as the scheduler will not be started.
-}
-
 #endif //RTOS_CPP_WRAPPER_KERNEL_HELPERS_HPP
