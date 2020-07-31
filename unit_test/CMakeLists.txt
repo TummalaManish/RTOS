@@ -11,5 +11,5 @@ target_link_libraries(  test_runner
                         gtest gmock
                         gmock_main
                         gtest_main
-                        mem_manger_win
-                        obj_thread_win)
+                        mem_manger
+                        obj_thread)

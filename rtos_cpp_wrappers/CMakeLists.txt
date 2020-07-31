@@ -1,14 +1,10 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-include_directories(../rtos_c/rtos_core/include)
+# The c-kernel is not distinguishable from the port to a simulator.
+add_library(obj_thread source/Thread.cpp)
+target_include_directories(obj_thread PUBLIC include interface)
+target_link_libraries(obj_thread kernel)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSIM=1")
-
-#Thread not yet implemented.
-add_library(obj_thread_win source/Thread.cpp)
-target_include_directories(obj_thread_win PUBLIC include interface)
-target_link_libraries(obj_thread_win kernel_win)
-
-add_library(mem_manger_win source/MemoryManager.cpp)
-target_include_directories(mem_manger_win PUBLIC include interface)
-target_link_libraries(mem_manger_win kernel_win)
+add_library(mem_manger source/MemoryManager.cpp)
+target_include_directories(mem_manger PUBLIC include interface)
+target_link_libraries(mem_manger kernel)
