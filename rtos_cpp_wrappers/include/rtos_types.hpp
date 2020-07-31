@@ -10,6 +10,9 @@
  */
 
 
+#ifndef RTOS_TYPES_HPP
+#define RTOS_TYPES_HPP
+
 /*------------------- FreeRTOS Types ---------------------*/
 #include "FreeRTOS.h"
 
@@ -22,8 +25,6 @@
 /*--------------------------------------------------------*/
 #include <stdint.h>
 
-#ifndef RTOS_TYPES_HPP
-#define RTOS_TYPES_HPP
 namespace RTOS{
 /**
  * @brief Type used for rtos thread priories.

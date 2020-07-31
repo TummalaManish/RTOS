@@ -22,7 +22,7 @@ namespace RTOS{
         /**
          * @brief   Joins the thread to the kernal when asked.
          */
-        virtual void                    thread_join() = 0;
+        virtual void                    thread_join() const = 0;
 
         /**
          * @brief   stops the running theread. And, returns the status of the thread stop.
@@ -36,14 +36,14 @@ namespace RTOS{
          *
          * @return  rtos_return_status_e eRTOSSuccess if thread stopped else eRTOSFailure.
          */
-        virtual rtos_return_status_e    thread_suspend() = 0;
+        virtual rtos_return_status_e    thread_suspend() const = 0;
 
         /**
          * @brief Resumes the suspend task.
          * 
          * @return rtos_return_status_e 
          */
-        virtual rtos_return_status_e    thread_resume() = 0;
+        virtual rtos_return_status_e    thread_resume() const = 0;
 
         /**
          * @brief   Get the thread priority.
@@ -110,6 +110,13 @@ namespace RTOS{
         /**
          * @brief   Yields the thread from execution.
          */
-        virtual void                    thread_yield() = 0;
+        virtual void                    thread_yield() const = 0;
+
+        /**
+         * @breif   Check if the thread is created or had issues while creating the thread.
+         *
+         * @return  true if the thread is created else false.
+         */
+        virtual bool                    is_thread_created() const = 0;
     };
 }

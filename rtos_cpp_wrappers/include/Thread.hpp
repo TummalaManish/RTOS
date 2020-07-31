@@ -10,7 +10,6 @@
 
 #include <IThread.hpp>
 #include <rtos_types.hpp>
-#include <task.h>
 
 namespace RTOS{
 
@@ -19,17 +18,19 @@ namespace RTOS{
      */
     class Thread : public IThread{
 
-        rtos_thread_id_t        m_threadId;         /**<Holds the id of the current thread.                 >*/
-        rtos_thread_type_e      m_ethreadType;      /**<Hold the type of the curent thread object.          >*/
-        rtos_thread_handel_t    m_pHandel;          /**<Points to the task handel of the created thread.    >*/
-        rtos_thread_stack_t     m_pStack;           /**<Points to the stack of the thread created.          >*/
-        rtos_thread_cb_t        m_pTaskCb;          /**<Points to the task's control block.                 >*/
+        static rtos_thread_id_t m_sThreadCount;     /**<Holds the count of the threads that have been created       >*/
 
+        /*---------------- Non Static member variables -------- ----*/
+        rtos_thread_id_t        m_threadId;         /**<Holds the id of the current thread.                         >*/
+        rtos_thread_type_e      m_ethreadType;      /**<Hold the type of the curent thread object.                  >*/
+        rtos_thread_handel_t    m_pHandel;          /**<Points to the task handel of the created thread.            >*/
+        rtos_thread_stack_t     m_pStack;           /**<Points to the stack of the thread created.                  >*/
+        rtos_thread_cb_t        m_pTaskCb;          /**<Points to the task's control block.                         >*/
     public:
 
-        explicit Thread() = delete;                 /**<Default constructor is deleted.                     >*/
+        explicit Thread() = delete;                 /**<Default constructor is deleted.                             >*/
         
-        Thread(rtos_thread_name_t       thread_name,/**<Single constructor for the thread class.            >*/
+        Thread(rtos_thread_name_t       thread_name,/**<Single constructor for the thread class.                    >*/
                rtos_thread_priority_t   thread_priority,
                rtos_stack_size_t        thread_stack_size,
                rtos_thread_type_e       thread_type,
@@ -37,8 +38,16 @@ namespace RTOS{
 
         ~Thread();
         /*------------------ Static Methods -------------------*/
-        static  bool            is_schedular_running();
-        static  void            thread_start(void *);
+        /**
+         * @breif   Used to identify if the scheduler is running or not.
+         * @return  True if the scheduler is currently running.
+         */
+        static  bool            is_scheduler_running();
+        /**
+         * @breif   Starts the freeRTOS scheduler if not running.
+         */
+        static  void            start_scheduler();
+        static  void            thread_start(void*);
         static  void            thread_start_suspended(void*);
 
         /*---- Methods that are from the IThread interface ----*/
@@ -46,15 +55,16 @@ namespace RTOS{
         rtos_thread_priority_t  get_thread_priority() const override;
         rtos_return_status_e    set_thread_priority(rtos_thread_priority_t) override;
         char const*             get_thread_name() const override;
-        rtos_thread_status_e    get_thread_status(void) const override;
-        bool                    is_thread_killable(void) const override;
-        rtos_return_status_e    thread_resume() override;
-        void                    thread_join() override;
+        rtos_thread_status_e    get_thread_status() const override;
+        bool                    is_thread_killable() const override;
+        rtos_return_status_e    thread_resume() const override;
+        void                    thread_join() const override;
 
-        void                    thread_yield(void) override;
-        rtos_return_status_e    thread_suspend(void) override;
+        void                    thread_yield() const override;
+        rtos_return_status_e    thread_suspend() const override;
+        bool                    is_thread_created() const override;
 
-
-        virtual void                    thread_run(void) = 0;
+    private:
+        virtual void            thread_run() = 0;
     };
 }

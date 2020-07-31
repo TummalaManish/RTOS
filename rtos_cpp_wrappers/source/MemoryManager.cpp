@@ -66,7 +66,7 @@ namespace RTOS{
 extern "C" void vApplicationMallocFailedHook(void);
 void vApplicationMallocFailedHook(void){
     //TODO: memory allocation fails have to the handled more appropiatly.
-#if SIM == 0
+#ifdef SIM
     __debugbreak();
 #endif
 }

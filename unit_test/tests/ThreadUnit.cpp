@@ -22,6 +22,6 @@ TEST(ThreadCreationPostive, ThreadCreationValidParameters){
     EXPECT_STREQ(thread.get_thread_name(), TaskName);
     EXPECT_EQ(thread.get_thread_priority(), TaskPriority);
     EXPECT_TRUE(thread.is_thread_killable());
-    ASSERT_TRUE(!thread.is_schedular_running());
+    ASSERT_TRUE(!thread.is_scheduler_running());
     //This cannot be tested any further.
 }

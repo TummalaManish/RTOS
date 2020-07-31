@@ -14,11 +14,15 @@
 
 namespace RTOS{
 
+    /*--------- static value initilization ---------*/
+    rtos_thread_id_t Thread::m_sThreadCount = 0;
+    /*----------------------------------------------*/
+
     RTOS::Thread::Thread(rtos_thread_name_t thread_name, rtos_thread_priority_t thread_priority,
                          rtos_stack_size_t thread_stack_size, rtos_thread_type_e thread_type,
                          rtos_thread_id_t thread_id) : m_ethreadType(thread_type) {
 
-        if (is_schedular_running() == eSchedulerNotRunning) {
+        if (is_scheduler_running() == eSchedulerNotRunning) {
             if (thread_stack_size != 0 && thread_type == eNonKillabe && thread_priority > 0) {
 
                 StackType_t th_stack[thread_stack_size];
@@ -32,8 +36,12 @@ namespace RTOS{
                                               this,
                                               thread_priority,
                                               th_stack,
+
                                               &th_TCB);
-                vTaskSuspend(m_pHandel); //Places the task in the suspended list.
+                if (m_pHandel not_eq static_cast<void*>(nullptr)) {
+                    vTaskSuspend(m_pHandel); //Places the task in the suspended list.
+                    ++m_sThreadCount;
+                }
             }
             else if (thread_stack_size != 0 && thread_type == eKillable && thread_priority > 0) {
                 if (MemoryManager::get_Instance().get_stack(m_pStack, thread_stack_size) == eMemAllocationSuccess &&
@@ -46,7 +54,10 @@ namespace RTOS{
                                                   thread_priority,
                                                   m_pStack,
                                                   m_pTaskCb);
-                    vTaskSuspend(m_pHandel); //Places the task in the suspended list.
+                    if (m_pHandel not_eq static_cast<void*>(nullptr)) {
+                        vTaskSuspend(m_pHandel); //Places the task in the suspended list.
+                        ++m_sThreadCount;
+                    }
                 }
                 else {
                     //Cannot create the task with given specs.
@@ -56,6 +67,7 @@ namespace RTOS{
             }
             else {
                 //Creating a task encountered the an error.
+                /*Note:This function must be implemented somewhere in the base of the port*/
                 __debugbreak();
             }
             if (thread_id != 0) { m_threadId = thread_id; }
@@ -75,6 +87,9 @@ namespace RTOS{
                                                thread_priority,
                                                th_stack,
                                                &th_TCB);
+                if (m_pHandel not_eq static_cast<void*>(nullptr)) {
+                    ++m_sThreadCount;
+                }
             }
             else if (thread_stack_size != 0 && thread_type == eKillable && thread_priority > 0) {
                 if (MemoryManager::get_Instance().get_stack(m_pStack, thread_stack_size) == eMemAllocationSuccess &&
@@ -86,6 +101,9 @@ namespace RTOS{
                                                   thread_priority,
                                                   m_pStack,
                                                   m_pTaskCb);
+                    if (m_pHandel not_eq static_cast<void*>(nullptr)) {
+                        ++m_sThreadCount;
+                    }
                 }
                 else {
                     //Cannot create the task with give specs.
@@ -95,8 +113,10 @@ namespace RTOS{
             }
             else {
                 //Creating a task encountered the an error.
+                /*Note:This function must be implemented somewhere in the base of the port*/
                 __debugbreak();
             }
+            //TODO: Thread id assignment have to be made unique.
             if (thread_id != 0) { m_threadId = thread_id; }
                 /*Review: rtos_thread_id_t type is adjusted according to the number of tasks that can be created.*/
             else { m_threadId = static_cast<rtos_thread_id_t>(uxTaskGetTaskNumber(m_pHandel)); }
@@ -113,27 +133,37 @@ namespace RTOS{
     }
 
     void Thread::thread_start(void * super){
-        auto* this_obj = static_cast<Thread *>(super);
-        this_obj->thread_run();
+        auto *this_obj = static_cast<Thread *>(super);
+        if(this_obj->is_thread_created()){
+            this_obj->thread_run();
 
-        /*--------- Execution should never come here -----------*/
-        //TODO: Invalid thread exit. The thread will be cleaned up and this has
-        //      to be logged. Once the logger is implemented.
-        __debugbreak();
+            /*--------- Execution should never come here -----------*/
+            //TODO: Invalid thread exit. The thread will be cleaned up and this has
+            //      to be logged. Once the logger is implemented.
+            __debugbreak();
+        }
+        else{
+            __debugbreak();
+        }
     }
 
     void Thread::thread_start_suspended(void * super) {
-        auto* this_obj = static_cast<Thread *>(super);
-        this_obj->thread_suspend();
-        this_obj->thread_run();
+        auto *this_obj = static_cast<Thread *>(super);
+        if(this_obj->is_thread_created()) {
+            this_obj->thread_suspend();
+            this_obj->thread_run();
 
-        /*--------- Execution should never come here -----------*/
-        //TODO: Invalid thread exit. The thread will be cleaned up and this has
-        //      to be logged. Once the logger is implemented.
-        __debugbreak();
+            /*--------- Execution should never come here -----------*/
+            //TODO: Invalid thread exit. The thread will be cleaned up and this has
+            //      to be logged. Once the logger is implemented.
+            __debugbreak();
+        }
+        else{
+            __debugbreak();
+        }
     }
 
-    bool Thread::is_schedular_running() {
+    bool Thread::is_scheduler_running() {
         return xTaskGetSchedulerState() == taskSCHEDULER_RUNNING;
     }
 
@@ -165,23 +195,32 @@ namespace RTOS{
         return m_ethreadType == eKillable;
     }
 
-    void Thread::thread_yield() {
+    void Thread::thread_yield() const {
+        //This macro will be populated by the port layer.
         taskYIELD();
     }
 
-    rtos_return_status_e Thread::thread_suspend() {
+    rtos_return_status_e Thread::thread_suspend() const {
         vTaskSuspend(m_pHandel);
         return eRTOSSuccess;
     }
 
-    rtos_return_status_e Thread::thread_resume() {
+    rtos_return_status_e Thread::thread_resume() const {
         vTaskResume(m_pHandel);
         return eRTOSSuccess;
     }
 
-    void Thread::thread_join() {
-        if (!is_schedular_running()) { vTaskStartScheduler(); }
+    void Thread::thread_join() const {
         thread_resume();
+        if (not(is_scheduler_running())) { vTaskStartScheduler(); }
+    }
+
+    bool Thread::is_thread_created() const {
+        return m_pHandel not_eq static_cast<void*>(nullptr);
+    }
+
+    void Thread::start_scheduler() {
+        if (not(is_scheduler_running())){ vTaskStartScheduler(); }
     }
 }
 
