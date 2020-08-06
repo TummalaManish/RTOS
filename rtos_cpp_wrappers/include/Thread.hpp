@@ -22,7 +22,7 @@ namespace RTOS{
 
         /*---------------- Non Static member variables -------- ----*/
         rtos_thread_id_t        m_threadId;         /**<Holds the id of the current thread.                         >*/
-        rtos_thread_type_e      m_ethreadType;      /**<Hold the type of the curent thread object.                  >*/
+        rtos_thread_type_e      m_eThreadType;      /**<Hold the type of the curent thread object.                  >*/
         rtos_thread_handel_t    m_pHandel;          /**<Points to the task handel of the created thread.            >*/
         rtos_thread_stack_t     m_pStack;           /**<Points to the stack of the thread created.                  >*/
         rtos_thread_cb_t        m_pTaskCb;          /**<Points to the task's control block.                         >*/
@@ -47,6 +47,7 @@ namespace RTOS{
          * @breif   Starts the freeRTOS scheduler if not running.
          */
         static  void            start_scheduler();
+
         static  void            thread_start(void*);
         static  void            thread_start_suspended(void*);
 
@@ -65,6 +66,13 @@ namespace RTOS{
         bool                    is_thread_created() const override;
 
     private:
+        /**
+         * @breif   API used to delay the function.
+         */
+        static  void            thread_delay_ms(rtos_delay_t);
+        /**
+         * @breif   thread_run function that all the inherited classes have to implement.
+         */
         virtual void            thread_run() = 0;
     };
 }

@@ -30,7 +30,7 @@ namespace RTOS{
     eMemoryResult MemoryManager::get_stack(rtos_thread_stack_t& ppStack, rtos_stack_size_t StackSize){
 
         ppStack = static_cast<StackType_t*>(pvPortMalloc(StackSize*sizeof(StackType_t)));
-        return ppStack != NULL ? eMemAllocationSuccess : eMemAllocationFailed;
+        return ppStack != nullptr ? eMemAllocationSuccess : eMemAllocationFailed;
     }
 
     void MemoryManager::release_stack(rtos_thread_stack_t ppStack) {
@@ -42,7 +42,7 @@ namespace RTOS{
     eMemoryResult MemoryManager::get_TCB(rtos_thread_cb_t& ppTCB){
         
         ppTCB = static_cast<StaticTask_t*>(pvPortMalloc(sizeof(StaticTask_t)));
-        return ppTCB != NULL ? eMemAllocationSuccess : eMemAllocationFailed;
+        return ppTCB != nullptr ? eMemAllocationSuccess : eMemAllocationFailed;
     }
 
     void MemoryManager::release_TCB(rtos_thread_cb_t ppTCB) {
@@ -54,7 +54,7 @@ namespace RTOS{
     eMemoryResult MemoryManager::get_block(void**  pMemHolder, size_t iNumBytes){
         
         *pMemHolder = pvPortMalloc(iNumBytes);
-        return *pMemHolder != NULL ? eMemAllocationSuccess : eMemAllocationFailed;
+        return *pMemHolder != nullptr ? eMemAllocationSuccess : eMemAllocationFailed;
     }
 
     void MemoryManager::release_block(void *pMemHolder) {
@@ -65,8 +65,8 @@ namespace RTOS{
 //TODO: How the failed memory allocations have to be dealt with.
 extern "C" void vApplicationMallocFailedHook(void);
 void vApplicationMallocFailedHook(void){
-    //TODO: memory allocation fails have to the handled more appropiatly.
-#ifdef SIM
+    //TODO: memory allocation fails have to the handled more appropriately.
+#ifndef SIM
     __debugbreak();
 #endif
 }

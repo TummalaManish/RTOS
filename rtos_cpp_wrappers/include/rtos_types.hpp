@@ -69,6 +69,10 @@ namespace RTOS{
     using rtos_thread_handel_t = TaskHandle_t;
 
 /**
+ * @breif RTOS delay time.
+ */
+    using rtos_delay_t = float;
+/**
  * @brief Type of the thread id.
  */
 #if configMaxPriorities <= 255
@@ -83,7 +87,7 @@ namespace RTOS{
  * @brief Type used to identify thread status.
  */
     //TODO: 2 All the thread statuses have to be addeed here.
-    enum rtos_thread_status_e { //Thread status
+    enum class rtos_thread_status_e { //Thread status
 
         //Notes: Add the failure enums above. 
         eCoreMemoryAllocationFailed = -1,
@@ -95,20 +99,24 @@ namespace RTOS{
         //Notes: This is the last state.Hence, everything has be above this state number.
         eInvalidStatus = 127,
     };
+    using RTOS_THR_STA_E = rtos_thread_status_e;
+
 /**
  * @brief Enumerates success returns and failure returns in the RTOS.
  */
-    enum rtos_return_status_e {
+    enum class rtos_return_status_e {
         eRTOSSuccess = 1,
         eRTOSFailure = 0,
     };
+    using RTOS_RET_STA_E = rtos_return_status_e;
 /**
  * @brief Enumerates the scheduler status.
  */
-    enum rtos_scheduler_status_e {
+    enum class rtos_scheduler_status_e {
         eSchedulerNotRunning = 0,
         eSchedulerRunning = 1,
     };
+    using RTOS_SCH_STA_E = rtos_scheduler_status_e;
 
 /**
  * @brief Enumerates the diffrent thread types that can be created.
@@ -119,22 +127,27 @@ namespace RTOS{
  *          The stack and TCB for the NonKillable threads are not allocated from
  *          the heap. Rather these are allocated on the stack.
  */
-    enum rtos_thread_type_e {
+    enum class rtos_thread_type_e {
         eKillable = 0,
         eNonKillabe
     };
+    using RTOS_THR_TYP_E = rtos_thread_type_e;
 
+    /*-------------------- Dead Code -------------------------------------------*/
+    // cppcheck-suppress unusedStructMember
 /**
  * @brief Struct used to hold the status of the thread object.
  *          This structer is designed with 32 bit architectures in mind.
  */
-    struct r_s_stru{
+    // cppcheck-suppress unusedStructMember
+    struct r_s_struct{
         /*---------- Name ------- bits used ------------------------------------*/
         uint32_t threadPriority     :16;    /**< Holds the thread priority.     */
         uint32_t threadStatus       : 8;    /**< Holds the current thread status*/
         uint32_t threadType         : 1;    /**< Holds the type of the thread.  */
+    /*--------------------------------------------------------------------------*/
 
     };
-    using rtos_status_structer = struct r_s_stru;
+    using rtos_status_structer = struct r_s_struct;
 }
 #endif //Closing RTOS_TYPES_HPP.

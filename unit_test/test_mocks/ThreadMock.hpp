@@ -40,7 +40,7 @@ namespace TEST{
 
         rtos_return_status_e    thread_delete() override{
             Thread::~Thread();
-            return eRTOSSuccess;
+            return RTOS_RET_STA_E::eRTOSSuccess;
         }
     };
 }
