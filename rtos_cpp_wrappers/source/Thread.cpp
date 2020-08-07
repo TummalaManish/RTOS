@@ -124,7 +124,7 @@ namespace RTOS{
     }
 
     Thread::~Thread() {
-        vTaskDelete(m_pHandel);
+        if (is_scheduler_running()){ vTaskDelete(m_pHandel); }
         if (Thread::is_thread_killable()){
             //Memory for the task has been provided from the heap hence the clean up.
             MemoryManager::release_TCB(m_pTaskCb);
