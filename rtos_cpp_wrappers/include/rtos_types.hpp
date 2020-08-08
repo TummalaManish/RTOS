@@ -23,7 +23,7 @@
 #include "stream_buffer.h"
 #include "portmacro.h"
 /*--------------------------------------------------------*/
-#include <stdint.h>
+#include <cstdint>
 
 namespace RTOS{
 /**
@@ -49,7 +49,7 @@ namespace RTOS{
     using rtos_stack_size_t = configSTACK_DEPTH_TYPE;
 
 /**
- * @brief Packs the paramters for the thread.
+ * @brief Packs the parameters for the thread.
  */
     using rtos_thread_parmas_pack = void *;
 
@@ -86,7 +86,7 @@ namespace RTOS{
 /**
  * @brief Type used to identify thread status.
  */
-    //TODO: 2 All the thread statuses have to be addeed here.
+    //TODO: 2 All the thread statuses have to be added here.
     enum class rtos_thread_status_e { //Thread status
 
         //Notes: Add the failure enums above. 
@@ -119,7 +119,7 @@ namespace RTOS{
     using RTOS_SCH_STA_E = rtos_scheduler_status_e;
 
 /**
- * @brief Enumerates the diffrent thread types that can be created.
+ * @brief Enumerates the different thread types that can be created.
  * 
  *          The stack and TCB for the Killable threads are allocated from the 
  *          heap block using the memory manager i.e using the portMalloc API's
@@ -132,22 +132,5 @@ namespace RTOS{
         eNonKillabe
     };
     using RTOS_THR_TYP_E = rtos_thread_type_e;
-
-    /*-------------------- Dead Code -------------------------------------------*/
-    // cppcheck-suppress unusedStructMember
-/**
- * @brief Struct used to hold the status of the thread object.
- *          This structer is designed with 32 bit architectures in mind.
- */
-    // cppcheck-suppress unusedStructMember
-    struct r_s_struct{
-        /*---------- Name ------- bits used ------------------------------------*/
-        uint32_t threadPriority     :16;    /**< Holds the thread priority.     */
-        uint32_t threadStatus       : 8;    /**< Holds the current thread status*/
-        uint32_t threadType         : 1;    /**< Holds the type of the thread.  */
-    /*--------------------------------------------------------------------------*/
-
-    };
-    using rtos_status_structer = struct r_s_struct;
 }
 #endif //Closing RTOS_TYPES_HPP.
