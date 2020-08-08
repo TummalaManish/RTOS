@@ -15,8 +15,10 @@ add_subdirectory(rtos_cpp_wrappers)
 # This the FreeRTOS kernel.
 add_subdirectory(rtos_c)
 
-# This is the library for the gtest.
-add_subdirectory(googletest)
+if(RTOS_TEST)
+    # This is the library for the gtest.
+    add_subdirectory(googletest)
 
-# Test directory for the unit tests.
-add_subdirectory(unit_test)
+    # Test directory for the unit tests.
+    add_subdirectory(unit_test)
+endif()
