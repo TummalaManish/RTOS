@@ -167,8 +167,17 @@ namespace RTOS{
         return xTaskGetSchedulerState() == taskSCHEDULER_RUNNING;
     }
 
-    rtos_thread_id_t Thread::get_thread_id() const {
-        return m_threadId;
+    void Thread::thread_yield(){
+        //This macro will be populated by the port layer.
+        taskYIELD();
+    }
+
+    void Thread::start_scheduler() {
+        if (not(is_scheduler_running())){ vTaskStartScheduler(); }
+    }
+
+    void Thread::thread_delay_ms(rtos_delay_t delay) {
+        vTaskDelay(static_cast<TickType_t>(pdMS_TO_TICKS(delay)));
     }
 
     rtos_thread_priority_t Thread::get_thread_priority() const {
@@ -195,19 +204,12 @@ namespace RTOS{
         return m_eThreadType == RTOS_THR_TYP_E::eKillable;
     }
 
-    void Thread::thread_yield() const {
-        //This macro will be populated by the port layer.
-        taskYIELD();
-    }
-
-    rtos_return_status_e Thread::thread_suspend() const {
+    void Thread::thread_suspend() const {
         vTaskSuspend(m_pHandel);
-        return RTOS_RET_STA_E::eRTOSSuccess;
     }
 
-    rtos_return_status_e Thread::thread_resume() const {
+    void Thread::thread_resume() const {
         vTaskResume(m_pHandel);
-        return RTOS_RET_STA_E::eRTOSSuccess;
     }
 
     void Thread::thread_join() const {
@@ -216,16 +218,18 @@ namespace RTOS{
     }
 
     bool Thread::is_thread_created() const {
-        return m_pHandel not_eq static_cast<void*>(nullptr);
+        return (m_pHandel not_eq static_cast<void*>(nullptr));
     }
 
-    void Thread::start_scheduler() {
-        if (not(is_scheduler_running())){ vTaskStartScheduler(); }
+    rtos_thread_id_t Thread::get_thread_id() const {
+        return m_threadId;
     }
 
-    void Thread::thread_delay_ms(rtos_delay_t delay) {
-        vTaskDelay(static_cast<TickType_t>(pdMS_TO_TICKS(delay)));
+    rtos_base_t Thread::notify(rtos_notify_value notifyValue, RTOS_NTF_TYP_E actionType) {
+        return (xTaskNotify(m_pHandel, notifyValue,
+                            static_cast<eNotifyAction>(actionType)));
     }
+
 }
 
 extern "C" void vApplicationGetIdleTaskMemory(StaticTask_t ** ppxIdleTaskTCBBuffer,

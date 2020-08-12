@@ -20,12 +20,12 @@ namespace RTOS{
     class IThread{
 
         /**
-         * @brief   Joins the thread to the kernal when asked.
+         * @brief   Joins the thread to the kernel when asked.
          */
         virtual void                    thread_join() const = 0;
 
         /**
-         * @brief   stops the running theread. And, returns the status of the thread stop.
+         * @brief   stops the running thread. And, returns the status of the thread stop.
          *
          *          Every derived class can have its own implementation of this function.
          *          This is provided so as to have a customized thread control. The thread
@@ -36,19 +36,19 @@ namespace RTOS{
          *
          * @return  rtos_return_status_e eRTOSSuccess if thread stopped else eRTOSFailure.
          */
-        virtual rtos_return_status_e    thread_suspend() const = 0;
+        virtual void                    thread_suspend() const = 0;
 
         /**
          * @brief Resumes the suspend task.
          * 
          * @return rtos_return_status_e 
          */
-        virtual rtos_return_status_e    thread_resume() const = 0;
+        virtual void                    thread_resume() const = 0;
 
         /**
          * @brief   Get the thread priority.
          *
-         *          Returns the thread priority of the object the referenc or the pointer
+         *          Returns the thread priority of the object the reference or the pointer
          *          of this interface class is pointing to.
          * 
          * @return  rtos_thread_priority_t.
@@ -108,15 +108,15 @@ namespace RTOS{
         virtual bool                    is_thread_killable() const = 0;
 
         /**
-         * @brief   Yields the thread from execution.
-         */
-        virtual void                    thread_yield() const = 0;
-
-        /**
          * @breif   Check if the thread is created or had issues while creating the thread.
          *
          * @return  true if the thread is created else false.
          */
         virtual bool                    is_thread_created() const = 0;
+
+        /**
+         *
+         */
+        virtual rtos_base_t             notify(rtos_notify_value, RTOS_NTF_TYP_E) = 0;
     };
 }

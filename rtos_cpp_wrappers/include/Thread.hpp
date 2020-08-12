@@ -14,7 +14,7 @@
 namespace RTOS{
 
     /**
-     * @brief This class implements the thread i.e. the warapper for the FreeRTOS Task.
+     * @brief This class implements the thread i.e. the wrapper for the FreeRTOS Task.
      */
     class Thread : public IThread{
 
@@ -22,8 +22,8 @@ namespace RTOS{
 
         /*---------------- Non Static member variables -------- ----*/
         rtos_thread_id_t        m_threadId;         /**<Holds the id of the current thread.                         >*/
-        rtos_thread_type_e      m_eThreadType;      /**<Hold the type of the curent thread object.                  >*/
-        rtos_thread_handel_t    m_pHandel;          /**<Points to the task handel of the created thread.            >*/
+        rtos_thread_type_e      m_eThreadType;      /**<Hold the type of the current thread object.                  >*/
+        rtos_thread_handel_t    m_pHandel;          /**<Points to the task handle of the created thread.            >*/
         rtos_thread_stack_t     m_pStack;           /**<Points to the stack of the thread created.                  >*/
         rtos_thread_cb_t        m_pTaskCb;          /**<Points to the task's control block.                         >*/
     public:
@@ -47,8 +47,15 @@ namespace RTOS{
          * @breif   Starts the freeRTOS scheduler if not running.
          */
         static  void            start_scheduler();
-
+        /**
+         * @breif   Thread starter functions that'll be passed into the kernel.
+         */
         static  void            thread_start(void*);
+        /**
+         * @breif   Thread starter functions that'll be passed into the kernel.
+         *          The primary difference is that the thread will be suspended
+         *          at the moment attached to the kernel.
+         */
         static  void            thread_start_suspended(void*);
 
         /*---- Methods that are from the IThread interface ----*/
@@ -58,16 +65,26 @@ namespace RTOS{
         char const*             get_thread_name() const override;
         rtos_thread_status_e    get_thread_status() const override;
         bool                    is_thread_killable() const override;
-        rtos_return_status_e    thread_resume() const override;
+
+
+        void                    thread_suspend() const override;
+        void                    thread_resume() const override;
+        bool                    is_thread_created() const override;
+        rtos_base_t             notify(rtos_notify_value, RTOS_NTF_TYP_E) override;
         void                    thread_join() const override;
 
-        void                    thread_yield() const override;
-        rtos_return_status_e    thread_suspend() const override;
-        bool                    is_thread_created() const override;
 
     private:
+
         /**
-         * @breif   API used to delay the function.
+ * @brief   Yields the thread from execution.
+ */
+        static  void            thread_yield();
+        /**
+         * @breif   Calling this function will move the thread to blocked state for a
+         *          given amount of time.
+         * @param   This should be a non-negative value describing the number of milli
+         *          -seconds the thread has to be in blocked state before being resumed.
          */
         static  void            thread_delay_ms(rtos_delay_t);
         /**
