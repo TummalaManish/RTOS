@@ -23,22 +23,17 @@ namespace TEST{
 
     class ThreadMock: public Thread{
 
-        [[noreturn]] void thread_run() override{
-
-            for(;;){
-            }
+        void run() override{
+            suspend();
+            vTaskSuspendAll();
         }
 
     public:
-        ThreadMock(rtos_thread_name_t thread_name, rtos_thread_priority_t thread_priority, rtos_stack_size_t stack_size,
-                   rtos_thread_type_e thread_type) :
-                    Thread(thread_name,
-                           thread_priority,
-                           stack_size,
-                           thread_type){
+        ThreadMock(thread_name_t thread_name, thread_priority_t thread_priority, stack_size_t stack_size)
+                    :Thread(thread_name, thread_priority, stack_size){
         }
 
-        rtos_return_status_e    thread_delete() override{
+        return_status_e    thread_delete() override{
             Thread::~Thread();
             return RTOS_RET_STA_E::eRTOSSuccess;
         }

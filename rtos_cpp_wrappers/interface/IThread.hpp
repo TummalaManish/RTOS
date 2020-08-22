@@ -19,10 +19,11 @@ namespace RTOS{
      */
     class IThread{
 
+    public:
         /**
-         * @brief   Joins the thread to the kernel when asked.
+         * @brief   Joins the thread to the kernel when invoked.
          */
-        virtual void                    thread_join() const = 0;
+        virtual void                    join() = 0;
 
         /**
          * @brief   stops the running thread. And, returns the status of the thread stop.
@@ -36,14 +37,14 @@ namespace RTOS{
          *
          * @return  rtos_return_status_e eRTOSSuccess if thread stopped else eRTOSFailure.
          */
-        virtual void                    thread_suspend() const = 0;
+        virtual void                    suspend() const = 0;
 
         /**
          * @brief Resumes the suspend task.
          * 
          * @return rtos_return_status_e 
          */
-        virtual void                    thread_resume() const = 0;
+        virtual void                    resume() const = 0;
 
         /**
          * @brief   Get the thread priority.
@@ -53,7 +54,7 @@ namespace RTOS{
          * 
          * @return  rtos_thread_priority_t.
          */
-        virtual rtos_thread_priority_t  get_thread_priority() const = 0;
+        virtual thread_priority_t  get_priority() const = 0;
 
         /**
          * @brief   Set the thread priority object
@@ -61,21 +62,21 @@ namespace RTOS{
          * @return  eRTOSSuccess if the priority setting is successful.
          * @return  eRTOSSuccess if the priority setting is unsuccessful.
          */
-        virtual rtos_return_status_e    set_thread_priority(rtos_thread_priority_t) = 0;
+        virtual return_status_e    set_priority(thread_priority_t) = 0;
 
         /**
          * @brief   Get the thread id of the thread.
          *          Returns the thread id of the object.
          * @return  rtos_thread_id_t 
          */ 
-        virtual rtos_thread_id_t        get_thread_id() const = 0;
+        virtual thread_id_t        get_id() const = 0;
 
         /**
          * @brief   Get the thread name.
          * 
          * @return  char const* Pointer to the name of the thread.
          */
-        virtual char const*             get_thread_name() const = 0;
+        virtual char const*             get_name() const = 0;
 
         /**
          * @brief   Get the threat status.
@@ -84,7 +85,7 @@ namespace RTOS{
          * 
          * @return  rtos_return_status_e returns one of @ref rtos_return_status_e. 
          */
-        virtual rtos_thread_status_e    get_thread_status() const = 0;
+        virtual thread_status_e    get_status() const = 0;
 
         /**
          * @brief   Deletes the thread.
@@ -97,15 +98,7 @@ namespace RTOS{
          *
          * @return  rtos_return_status_e returns one of @ref rtos_return_status_e.
          */
-        virtual rtos_return_status_e    thread_delete() = 0;
-
-        /**
-         * @brief   Checks if the thread is killable or not.
-         * 
-         * @return  true if the thread is killabel.
-         * @return  false if the thread is nonkillable.
-         */
-        virtual bool                    is_thread_killable() const = 0;
+        virtual return_status_e    thread_delete() = 0;
 
         /**
          * @breif   Check if the thread is created or had issues while creating the thread.
@@ -115,8 +108,12 @@ namespace RTOS{
         virtual bool                    is_thread_created() const = 0;
 
         /**
+         * @breif   Used to notify the thread that is being operated on.
          *
+         * @param   notifyValue - Value used as a notification to the thread.
+         * @param   actionType - Type of notification(changes the notification register).
+         * @return  eRTOSSuccess is returned if the notification has been sent to the thread.
          */
-        virtual rtos_base_t             notify(rtos_notify_value, RTOS_NTF_TYP_E) = 0;
+        virtual RTOS_RET_STA_E          notify(notify_value notifyValue , NTF_TYP_E actionType) = 0;
     };
 }

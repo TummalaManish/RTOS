@@ -25,6 +25,9 @@ if(TEST)
     # This is the library for the gtest.
     add_subdirectory(googletest)
 
+    # Test directory for the functional tests.
+    add_subdirectory(func_test)
+
     # Test directory for the unit tests.
     add_subdirectory(unit_test)
 endif()

@@ -4,5 +4,10 @@
         "OPTIMISED",
         "xtaskhandle"
     ],
-    "cSpell.language": "en,en-US"
+    "cSpell.language": "en,en-US",
+    
+    "cmake.configureArgs": [
+        "-DTEST=ON",
+        "-DSIM=ON",
+    ]
 }
