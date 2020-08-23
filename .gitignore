@@ -1,3 +1,4 @@
 *build*
 useroptions.cmake
 *.notes
+*FreeRTOSConfig.h
