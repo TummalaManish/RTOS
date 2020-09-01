@@ -18,58 +18,93 @@ namespace RTOS{
      */
     class Thread : public IThread{
 
-        static thread_id_t m_sThreadCount;          /**<Holds the count of the threads that have been created       >*/
+    public:
+        enum class signal_return_values{
+            eTimeOut = 0,
+            eExpectedSignalReceived,
+            eUnexpectedSignalReceived,
+        };
+        using SIG_RET_VAL = signal_return_values;
 
-        /*---------------- Non Static member variables -------- ----*/
-        thread_id_t        m_threadId;               /**<Holds the id of the current thread.                        >*/
-        thread_handel_t    m_pHandel{};              /**<Points to the task handle of the created thread.           >*/
-        thread_stack_t     m_pStack;                 /**<Points to the stack of the thread created.                 >*/
-        thread_cb_t        m_pTaskCb{};              /**<Points to the task's control block.                        >*/
+        struct notify_value{
+            bool timed_out;
+            uint32_t received_value;
+        };
+        using NTF_VALUE_S = struct notify_value;
+
+    private:
+        static id_t m_sThreadCount;            /**<Holds the count of the threads that have been created      >*/
+
+        /*---------------- Non Static member variables -------------*/
+        status_e           m_threadStatus;            /**<Hold the status of the thread.                             >*/
+        id_t               m_threadId;                /**<Holds the id of the current thread.                        >*/
+        handel_t           m_pHandel;                 /**<Points to the task handle of the created thread.           >*/
+        stack_t            m_pStack;                  /**<Points to the stack of the thread created.                 >*/
+        control_block_t    m_pTaskCb;                 /**<Points to the task's control block.                        >*/
     public:
 
-        explicit Thread() = delete;                 /**<Default constructor is deleted.                             >*/
-        
-        Thread(thread_name_t       thread_name,     /**<Single constructor for the thread class.                    >*/
-               thread_priority_t   thread_priority,
-               stack_size_t        thread_stack_size,
-               thread_id_t         thread_id = 0);
+        explicit Thread() = delete;                  /**<Default constructor is deleted.                             >*/
+
+        /**
+         * @breif   Make's a mask with the specified bit set.
+         *
+         * @param   value Any number between 0 and 31.
+         * @return  returns a 32 bit value with the bit specied set.
+         */
+        static uint32_t SIG_BIT(int value);
+
+        /**
+         * @brief   Thread constructor.
+         * 
+         * @param   thread_name Name of the thread.
+         * @param   thread_priority Thread priority.
+         * @param   thread_stack_size Thread stack size.
+         * @param   thread_id Thread id by deafult will be 0.
+         */
+        Thread(name_t               thread_name,     /**<Single constructor for the thread class.                    >*/
+               priority_t           thread_priority,
+               stack_size_t         thread_stack_size,
+               id_t                 thread_id = 0);
 
         ~Thread();
         /*------------------ Static Methods -------------------*/
         /**
-         * @breif   Starts the freeRTOS scheduler if not running.
+         * @brief   Starts the freeRTOS scheduler if not running.
          */
         static  void            start_scheduler();
 
         /**
-         * @breif   Ends the scheduler.
+         * @brief   Ends the scheduler.
          */
         static  void            end_scheduler();
 
         /**
-         * @breif   Used to identify if the scheduler is running or not.
+         * @brief   Used to identify if the scheduler is running or not.
          * @return  True if the scheduler is currently running.
          */
         static  bool            is_scheduler_running();
 
     private:
         /**
-         * @breif   Thread starter functions that'll be passed into the kernel.
+         * @brief   Thread starter functions that'll be passed into the kernel.
          */
         static  void            start(void*);
 
     public:
         /*---- Methods that are from the IThread interface ----*/
-        thread_id_t        get_id() const override;
-        thread_priority_t  get_priority() const override;
-        return_status_e    set_priority(thread_priority_t) override;
-        char const*        get_name() const override;
-        thread_status_e    get_status() const override;
+        id_t                    get_id() const override;
+        priority_t              get_priority() const override;
+        return_status_e         set_priority(priority_t) override;
+        char const*             get_name() const override;
+        status_e                get_status() const override;
 
+        void                    signal_on_bits(uint32_t bitsToSet) override;
+        void                    send_value_with_over_write(uint32_t valueToSend) override;
+        RET_STA_E               send_value_with_no_over_write(uint32_t valueToSend) override;
         void                    suspend() const override;
         void                    resume() const override;
         bool                    is_thread_created() const override;
-        RTOS_RET_STA_E          notify(notify_value, NTF_TYP_E) override;
+        RET_STA_E               notify(notify_value_t, NTF_TYP_E) override;
         void                    join() override;
 
 
@@ -80,18 +115,47 @@ namespace RTOS{
          */
         static  void            yield();
         /**
-         * @breif   Calling this function will move the thread to blocked state for a
+         * @brief   Calling this function will move the thread to blocked state for a
          *          given amount of time.
          * @param   This should be a non-negative value describing the number of milli
          *          -seconds the thread has to be in blocked state before being resumed.
          */
         static  void            delay_ms(delay_t);
         /**
-         * @breif
+         * @brief   Call to this member paces the thread in blocked state till the thread
+         *          is notified by some other task or the time-out expires.
+         * 
+         * @param   entryClearMask      MASK to clear the bits of notification value on entry.
+         * @param   exitClearMask       MASK to cleat the bits of notification value on exit.
+         * @param   msDelay             Time-out for the wait.
+         * @param   notificationValue   Pointer to the memory that notify uses to place the notification value.
+         * @return  RET_STA_E           True if the notification is received well before the time-out else false.
          */
-        //TODO: static  void            wait_for_notification();
+        static RET_STA_E        wait_for_notification(uint32_t entryClearMask, uint32_t exitClearMask,
+                                                      delay_t msDelay, uint32_t* pNotificationValue = NULL);
         /**
-         * @breif   thread_run function that all the inherited classes have to implement.
+         * @brief   Call to this method blocks the thread for the given time or until the
+         *          signal on specified bit is received which ever is sooner.
+         *
+         *          If the wait-time times out. The function returns times-out if not the
+         *          signal received is expected or not.
+         *
+         * @param   signalMask  32 bit mask. Bits set in uint32_t value to receive the signal over.
+         * @param   blockTime   Time for which the thread will be placed on blocked list.
+         * @return  SIG_RET_VAL returns one of the enum values.
+         */
+        static SIG_RET_VAL      wait_for_signal_on_bit(uint32_t signalMask, delay_t blockTime);
+
+        /**
+         * @brief   Waits for a values as a notification.
+         *
+         * @param   blockTime time for which the task will be waiting for the value.
+         * @return  returns the NTF_VALUE_S with the received notification.
+         */
+        static NTF_VALUE_S      wait_for_value(delay_t blockTime);
+
+        /**
+         * @brief   thread_run function that all the inherited classes have to implement.
          */
         virtual void            run() = 0;
     };

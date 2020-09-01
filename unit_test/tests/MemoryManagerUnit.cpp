@@ -33,7 +33,7 @@ using namespace TEST;
 
 TEST(MemoryManagerTestPositive, AllocatingStack){
 
-    RTOS::thread_stack_t stack;
+    RTOS::stack_t stack;
     RTOS::stack_size_t size = 100;
     RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_stack(stack, size);
 
@@ -43,7 +43,7 @@ TEST(MemoryManagerTestPositive, AllocatingStack){
 
 TEST(MemoryManagerTestPositive, AllocatingTask){
 
-    RTOS::thread_cb_t TCB;
+    RTOS::control_block_t TCB;
     RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_TCB(TCB);
 
     ASSERT_EQ(res, RTOS::eMemoryResult::eMemAllocationSuccess);
@@ -63,7 +63,7 @@ TEST(MemoryManagerTestPositive, AllocatingByte){
 /*------------------- Negative Tests ------------------*/
 TEST(MemoryManagerTestNegative, UnableToAllocateStack){
 
-    RTOS::thread_stack_t stack;
+    RTOS::stack_t stack;
     RTOS::stack_size_t size = 24 * 1024; //Trying to reserve memory more than available.
     RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_stack(stack, size);
 
@@ -77,7 +77,7 @@ TEST(MemoryManagerTestNegative, UnableToAllocateTask){
     EXPECT_EQ(MemoryManagerMock::get_Instance().get_block(reinterpret_cast<void **>(&p_Temp),
                                                           configTOTAL_HEAP_SIZE - 32),
               RTOS::eMemoryResult::eMemAllocationSuccess);
-    RTOS::thread_cb_t TCB; //Trying to reserve memory when not available.
+    RTOS::control_block_t TCB; //Trying to reserve memory when not available.
     RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_TCB(TCB);
 
     ASSERT_EQ(res, RTOS::eMemoryResult::eMemAllocationFailed);

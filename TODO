@@ -3,3 +3,4 @@ TODO: 2 All the task block status have to be addeed here.
 ✘ Have to make changes to the FreeRTOS kernel to enable suspended or silent task start. @started(20-07-06 23:38) @cancelled(20-08-22 14:15)
 ✔ TODO: Refactor the enums to remove the RTOS prefix. @started(20-08-22 14:17) @done(20-08-22 14:42) @lasted(25m9s)
 ✔ Thread has to be re-designed to use freertos API with out any modifications. @done(20-08-22 14:15)
+✔ Signals have to be implemented in thread. @started(20-08-29 11:55) @done(20-09-01 13:59) @lasted(3d2h4m55s)

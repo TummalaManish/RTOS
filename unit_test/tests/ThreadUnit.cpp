@@ -14,7 +14,7 @@
 using namespace TEST;
 TEST(ThreadCreationPostive, ThreadCreationValidParameters){
     const char* TaskName = "UTThread";
-    constexpr thread_priority_t TaskPriority = 1;
+    constexpr priority_t TaskPriority = 1;
     constexpr stack_size_t TaskStackSize = 100;
     ThreadMock thread(TaskName, TaskPriority, TaskStackSize);
 

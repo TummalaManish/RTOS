@@ -29,13 +29,13 @@ namespace TEST{
         }
 
     public:
-        ThreadMock(thread_name_t thread_name, thread_priority_t thread_priority, stack_size_t stack_size)
+        ThreadMock(name_t thread_name, priority_t thread_priority, stack_size_t stack_size)
                     :Thread(thread_name, thread_priority, stack_size){
         }
 
         return_status_e    thread_delete() override{
             Thread::~Thread();
-            return RTOS_RET_STA_E::eRTOSSuccess;
+            return RET_STA_E::eRTOSSuccess;
         }
     };
 }

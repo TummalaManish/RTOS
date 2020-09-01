@@ -27,25 +27,25 @@ namespace RTOS{
 
     /*Note: This is not a const function because we might want to add book keeping feature
             to the memory manager. Same reason these are not static functions*/
-    eMemoryResult MemoryManager::get_stack(thread_stack_t& ppStack, stack_size_t StackSize){
+    eMemoryResult MemoryManager::get_stack(stack_t& ppStack, stack_size_t StackSize){
 
         ppStack = static_cast<StackType_t*>(pvPortMalloc(StackSize*sizeof(StackType_t)));
         return ppStack != nullptr ? eMemAllocationSuccess : eMemAllocationFailed;
     }
 
-    void MemoryManager::release_stack(thread_stack_t ppStack) {
+    void MemoryManager::release_stack(stack_t ppStack) {
         vPortFree(ppStack);
     }
 
     /*Note: This is not a const function because we might want to add book keeping feature
             to the memory manager. Same reason these are not static functions*/
-    eMemoryResult MemoryManager::get_TCB(thread_cb_t& ppTCB){
+    eMemoryResult MemoryManager::get_TCB(control_block_t& ppTCB){
         
         ppTCB = static_cast<StaticTask_t*>(pvPortMalloc(sizeof(StaticTask_t)));
         return ppTCB != nullptr ? eMemAllocationSuccess : eMemAllocationFailed;
     }
 
-    void MemoryManager::release_TCB(thread_cb_t ppTCB) {
+    void MemoryManager::release_TCB(control_block_t ppTCB) {
         vPortFree(ppTCB);
     }
 

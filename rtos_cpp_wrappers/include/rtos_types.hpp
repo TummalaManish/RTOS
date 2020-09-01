@@ -30,21 +30,21 @@ namespace RTOS{
  * @brief Type used for rtos thread priories.
  */
 #if configMaxPriorities <= 255
-    using thread_priority_t = uint8_t;
+    using priority_t = uint8_t;
 #elif configMaxPriorities <= 65535
-    using thread_priority_t = uint16_t;
+    using priority_t = uint16_t;
 #else
     #error("RTOS: The port dose not suppot prorites more than 65535!!")
 #endif //Closing rtos priority type.
 /**
- * @breif Base type used for all the rtos operations.
+ * @brief Base type used for all the rtos operations.
  */
     using base_t = BaseType_t;
 /**
  * @brief Type used for the thread names.
  */
     //TODO: 1 Have to implement inline low over head test for names.
-    using thread_name_t = const char *;
+    using name_t = const char *;
 /**
  * @brief Type used for the RTOS stack size.
  */
@@ -52,30 +52,30 @@ namespace RTOS{
 /**
  * @brief Stack of the thread.
  */
-    using thread_stack_t = StackType_t*;
+    using stack_t = StackType_t*;
 /**
  * @brief Static TCB of the thread.
  */
-    using thread_cb_t = StaticTask_t*;
+    using control_block_t = StaticTask_t*;
 /**
  * @brief Handel for the created thread.
  */
-    using thread_handel_t = TaskHandle_t;
+    using handel_t = TaskHandle_t;
 /**
- * @breif RTOS delay time.
+ * @brief RTOS delay time.
  */
     using delay_t = float;
 /**
- * @breif Type for the notification value.BaseType_t
+ * @brief Type for the notification value.BaseType_t
  */
-    using notify_value = uint32_t;
+    using notify_value_t = uint32_t;
 /**
  * @brief Type of the thread id.
  */
 #if configMaxPriorities <= 255
-    using thread_id_t = uint8_t;
+    using id_t = uint8_t;
 #elif configMaxPriorities <= 65535
-    using thread_id_t = uint16_t;
+    using id_t = uint16_t;
 #else
     #error("RTOS: The port dose not suppot threads more than 65535!!")
 #endif //Closing the RTOS thread id type.
@@ -85,18 +85,17 @@ namespace RTOS{
  */
     //TODO: 2 All the thread statuses have to be added here.
     //TODO: Have to remove unwanted status enumerations.
-    enum class thread_status_e { //Thread status
+    enum class status_e { //Thread status
         //Notes: Add the failure enums above.
-        eCoreMemoryAllocationFailed = -1,
         eNoStatus = 0,
-        eBlockedByChoice = 1,
-        eCoreThreadInitializationFailed,
-        eCoreThreadNotInitialized,
-        eCoreThreadInitialized,
+        eMemoryAllocationFailed = 1,
+        eBlockedByChoice = 2,
+        eThreadNotStarted = 4,
+        eThreadStarted = 8,
         //Notes: This is the last state.Hence, everything has be above this state number.
-        eInvalidStatus = 127,
+        eInvalidStatus = 128,
     };
-    using RTOS_THR_STA_E = thread_status_e;
+    using THR_STA_E = status_e;
 /**
  * @brief Enumerates success returns and failure returns in the RTOS.
  */
@@ -104,7 +103,7 @@ namespace RTOS{
         eRTOSSuccess = 1,
         eRTOSFailure = 0,
     };
-    using RTOS_RET_STA_E = return_status_e;
+    using RET_STA_E = return_status_e;
 /**
  * @brief Enumerates the scheduler status.
  */
@@ -114,16 +113,17 @@ namespace RTOS{
     };
     using SCH_STA_E = scheduler_status_e;
 /**
- * @breif   Different notification action types.
+ * @brief   Different notification action types.
  */
     enum class notify_type_e{
-        eNoAction = 0,              /* Notify the task without updating its notify value. */
-        eSetBits,                   /* Set bits in the task's notification value. */
-        eIncrement,                 /* Increment the task's notification value. */
-        eSetValueWithOverwrite,     /* Set the task's notification value to a specific value even if the
-                                     * previous value has not yet been read by the task. */
-        eSetValueWithoutOverwrite   /* Set the task's notification value if the previous value has been read by the
-                                     * task. */
+        eNoAction                   = eNoAction,                /* Notify the task without updating its notify value. */
+        eSetBits                    = eSetBits,                 /* Set bits in the task's notification value.         */
+        eIncrement                  = eIncrement,               /* Increment the task's notification value.           */
+        eSetValueWithOverwrite      = eSetValueWithOverwrite,   /* Set the task's notification value to a specific
+                                                                 * value even if the* previous value has not yet been
+                                                                 * read by the task.                                  */
+        eSetValueWithoutOverwrite   = eSetValueWithoutOverwrite /* Set the task's notification value if the previous value has been read by the
+                                                                 * task. */
     };
     using NTF_TYP_E = notify_type_e;
 }

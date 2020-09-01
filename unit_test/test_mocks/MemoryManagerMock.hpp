@@ -12,10 +12,10 @@ namespace TEST{
         public RTOS::MemoryManager{
             MOCK_METHOD2(get_block, RTOS::eMemoryResult(void * *, size_t));
             MOCK_METHOD1(release_block, void(void * ));
-            MOCK_METHOD2(get_stack, RTOS::eMemoryResult(RTOS::thread_stack_t & , RTOS::stack_size_t));
-            MOCK_METHOD1(release_stack, void(RTOS::thread_stack_t));
-            MOCK_METHOD1(get_TCB, RTOS::eMemoryResult(RTOS::thread_cb_t & ));
-            MOCK_METHOD1(release_TCB, void(RTOS::thread_cb_t));
+            MOCK_METHOD2(get_stack, RTOS::eMemoryResult(RTOS::stack_t & , RTOS::stack_size_t));
+            MOCK_METHOD1(release_stack, void(RTOS::stack_t));
+            MOCK_METHOD1(get_TCB, RTOS::eMemoryResult(RTOS::control_block_t& ));
+            MOCK_METHOD1(release_TCB, void(RTOS::control_block_t));
         };
 }
 #endif //RTOS_CPP_WRAPPER_MEMORYMANAGERMOCK_HPP

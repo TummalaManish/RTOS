@@ -16,19 +16,19 @@ namespace RTOS{
 
     /*Structure to pass the TCB details*/
     struct TCB_pass_s{
-        thread_stack_t m_pStack;
+        stack_t m_pStack;
         stack_size_t m_stackSize;
-        thread_priority_t m_threadPrio;
+        priority_t m_threadPrio;
         char m_threadName[configMAX_TASK_NAME_LEN];
     };
     using TCB_PASS_STR = struct TCB_pass_s;
 
     /*--------- static value initialization ---------*/
-    thread_id_t Thread::m_sThreadCount = 0;
+    id_t Thread::m_sThreadCount = 0;
     /*----------------------------------------------*/
 
-    RTOS::Thread::Thread(thread_name_t thread_name, thread_priority_t thread_priority,
-                         stack_size_t thread_stack_size, thread_id_t thread_id){
+    RTOS::Thread::Thread(const name_t thread_name, const priority_t thread_priority,
+                         const stack_size_t thread_stack_size, const id_t thread_id){
         m_pStack = NULL;
         m_pTaskCb = NULL;
         m_pHandel = NULL;
@@ -37,6 +37,7 @@ namespace RTOS{
                         == eMemoryResult::eMemAllocationSuccess));
 
         if (result){
+            m_threadStatus = THR_STA_E::eThreadNotStarted;
             auto* block = reinterpret_cast<TCB_PASS_STR*>(m_pTaskCb);
             block->m_pStack = m_pStack;
             block->m_threadPrio = thread_priority;
@@ -55,8 +56,12 @@ namespace RTOS{
             else { m_threadId = m_sThreadCount; }
         }
         else{
+
+            m_threadStatus = THR_STA_E::eMemoryAllocationFailed;
+#ifdef DBG_BRK
             //Have to use te BASE versioned debug interface.
             __debugbreak();
+#endif //Ending the DBG_BRK.
         }
     }
 
@@ -69,7 +74,7 @@ namespace RTOS{
 
     void Thread::start(void * super){
         auto *this_obj = static_cast<Thread *>(super);
-        if(this_obj->is_thread_created()){
+        if(this_obj->get_status() == THR_STA_E::eThreadStarted){
             this_obj->run();
 
             /*--------- Execution should never come here -----------*/
@@ -95,28 +100,73 @@ namespace RTOS{
         if (!(is_scheduler_running())){ vTaskStartScheduler(); }
     }
 
+    RET_STA_E Thread::wait_for_notification(uint32_t entryClearMask, uint32_t exitClearMask,
+                                            delay_t msDelay, uint32_t* pNotificationValue) {
+        auto ret_val = xTaskNotifyWait(entryClearMask, exitClearMask, pNotificationValue, msDelay);
+        return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
+    }
+
+    Thread::SIG_RET_VAL Thread::wait_for_signal_on_bit(uint32_t signalMask, delay_t blockTime) {
+        auto notification_value = static_cast<uint32_t>(0x00);
+        Thread::SIG_RET_VAL ret_value;
+        auto time_out_status = xTaskNotifyWait(signalMask, signalMask, &notification_value, blockTime);
+        uint32_t received_signal = notification_value & signalMask;
+        if (time_out_status == pdPASS) {
+            if (received_signal == signalMask) {
+                ret_value = Thread::SIG_RET_VAL::eExpectedSignalReceived;
+            }
+            else {
+                ret_value = Thread::SIG_RET_VAL::eUnexpectedSignalReceived;
+            }
+        }
+        else{
+            ret_value = Thread::SIG_RET_VAL::eTimeOut;
+        }
+        return ret_value;
+    }
+
+    Thread::NTF_VALUE_S Thread::wait_for_value(delay_t blockTime) {
+        Thread::NTF_VALUE_S ret_value = {true, static_cast<uint32_t>(0x00)};
+        auto time_out_status = xTaskNotifyWait(static_cast<uint32_t>(0x00),
+                                               static_cast<uint32_t>(0xFFFFFFFFFFFFFFFF),
+                                               &(ret_value.received_value),
+                                               blockTime);
+        if (time_out_status==pdPASS)
+            ret_value.timed_out = false;
+        else
+            ret_value.timed_out = true;
+        return ret_value;
+    }
+
+    uint32_t Thread::SIG_BIT(const int value) {
+        return ((static_cast<uint32_t>(0x01)) << value);
+    }
+
     void Thread::delay_ms(delay_t delay) {
         vTaskDelay(static_cast<TickType_t>(pdMS_TO_TICKS(delay)));
     }
 
-    thread_priority_t Thread::get_priority() const {
-        return static_cast<thread_priority_t>(uxTaskPriorityGet(m_pHandel));
+    void Thread::end_scheduler() {
+        vTaskEndScheduler();
+    }
+
+    priority_t Thread::get_priority() const {
+        return static_cast<priority_t>(uxTaskPriorityGet(m_pHandel));
     }
 
     //note: partially implemented.
-    return_status_e Thread::set_priority(thread_priority_t new_priority) {
+    return_status_e Thread::set_priority(priority_t new_priority) {
         //TODO: This is a bit complicated function has to be implement yet.
         vTaskPrioritySet(m_pHandel, new_priority);
-        return RTOS_RET_STA_E::eRTOSSuccess;
+        return RET_STA_E::eRTOSSuccess;
     }
 
     char const *Thread::get_name() const {
         return static_cast<const char*>(pcTaskGetName(m_pHandel));
     }
 
-    //todo: method not implemented yet.
-    thread_status_e Thread::get_status() const {
-        return RTOS_THR_STA_E::eCoreMemoryAllocationFailed;
+    status_e Thread::get_status() const {
+        return m_threadStatus;
     }
 
     void Thread::suspend() const {
@@ -153,25 +203,41 @@ namespace RTOS{
                                        block.m_threadPrio,
                                        block.m_pStack,
                                        m_pTaskCb);
+        m_threadStatus = THR_STA_E::eThreadStarted;
         // clang-format on
         start_scheduler();
     }
 
     bool Thread::is_thread_created() const {
-        return (m_pHandel != static_cast<void*>(NULL));
+        return static_cast<bool>(get_status() == THR_STA_E::eThreadStarted ? RET_STA_E::eRTOSSuccess
+                                                                           : RET_STA_E::eRTOSFailure);
     }
 
-    thread_id_t Thread::get_id() const {
+    id_t Thread::get_id() const {
         return m_threadId;
     }
 
-    RTOS_RET_STA_E Thread::notify(notify_value notifyValue, NTF_TYP_E actionType) {
+    RET_STA_E Thread::notify(notify_value_t notifyValue, NTF_TYP_E actionType) {
         base_t ret_val = xTaskNotify(m_pHandel, notifyValue, static_cast<eNotifyAction>(actionType));
-        return ret_val == pdPASS ? RTOS_RET_STA_E::eRTOSSuccess: RTOS_RET_STA_E::eRTOSFailure;
+        if (ret_val == pdPASS) {
+            return RET_STA_E::eRTOSSuccess;
+        } else {
+            return RET_STA_E::eRTOSFailure;
+        }
     }
 
-    void Thread::end_scheduler() {
-        vTaskEndScheduler();
+    void Thread::signal_on_bits(uint32_t bitsToSet) {
+        (void) xTaskNotify(m_pHandel, bitsToSet, static_cast<eNotifyAction>(NTF_TYP_E::eSetBits));
+    }
+
+    void Thread::send_value_with_over_write(uint32_t valueToSend) {
+        (void) xTaskNotify(m_pHandel, valueToSend, static_cast<eNotifyAction>(NTF_TYP_E::eSetValueWithOverwrite));
+    }
+
+    RET_STA_E Thread::send_value_with_no_over_write(uint32_t valueToSend) {
+        base_t ret_value = xTaskNotify(m_pHandel, valueToSend,
+                                       static_cast<eNotifyAction>(NTF_TYP_E::eSetValueWithoutOverwrite));
+        return ret_value == pdPASS ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
     }
 
 }

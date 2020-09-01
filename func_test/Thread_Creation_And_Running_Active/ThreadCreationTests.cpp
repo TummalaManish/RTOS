@@ -21,9 +21,10 @@ class test_thr1: public RTOS::Thread{
 
     int value_of_thread;
     void run() override {
-        std::cout<<"running thread number"<<value_of_thread<<std::endl;
-        Thread::delay_ms(500);
-        suspend();
+        for(;;) {
+            std::cout << "running thread number" << value_of_thread << std::endl;
+            Thread::delay_ms(500);
+        }
     }
 
     RTOS::return_status_e thread_delete() override { return RTOS::return_status_e::eRTOSSuccess;}
@@ -41,7 +42,9 @@ class main_thread: public RTOS::Thread{
             thread_array->join();
             thread_array++;
         }
-        delay_ms(6000);
+        delay_ms(500);
+
+        std::cout<<"Ending the test.";
         end_scheduler();
     }
 

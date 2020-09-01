@@ -85,7 +85,7 @@ namespace RTOS{
          * @return  eMemoryResult Returns eMemAllocationSuccess if the memory allocation is success
          *          -full. Else, eMemAllocationFailed is returned.
          */
-        eMemoryResult get_stack(thread_stack_t& ppStack, stack_size_t StackSize);
+        eMemoryResult get_stack(stack_t& ppStack, stack_size_t StackSize);
 
         /**
          * @brief   Frees the allocated stack of the thread.
@@ -96,7 +96,7 @@ namespace RTOS{
          * 
          * @param   ppStack pointer to the stack that has been assigned. 
          */
-        static void release_stack(thread_stack_t ppStack);
+        static void release_stack(stack_t ppStack);
 
         /**
          * @brief   Allocates the memory for the FreeRTOS control block.
@@ -104,7 +104,7 @@ namespace RTOS{
          * @param   ppTCB [out] This argument will passout the pointer to the allocated TCB
          * @return  eMemoryResult 
          */
-        eMemoryResult get_TCB(thread_cb_t& ppTCB);
+        eMemoryResult get_TCB(control_block_t& ppTCB);
 
         /**
          * @brief   Frees the allocated TCB of the thread.
@@ -115,6 +115,6 @@ namespace RTOS{
          * 
          * @param   ppStack pointer to the stack that has been assigned. 
          */
-        static void release_TCB(thread_cb_t ppTCB);
+        static void release_TCB(control_block_t ppTCB);
     };
 }
