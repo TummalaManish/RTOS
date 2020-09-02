@@ -122,8 +122,8 @@ namespace RTOS{
         eSetValueWithOverwrite      = eSetValueWithOverwrite,   /* Set the task's notification value to a specific
                                                                  * value even if the* previous value has not yet been
                                                                  * read by the task.                                  */
-        eSetValueWithoutOverwrite   = eSetValueWithoutOverwrite /* Set the task's notification value if the previous value has been read by the
-                                                                 * task. */
+        eSetValueWithoutOverwrite   = eSetValueWithoutOverwrite /* Set the task's notification value if the previous
+                                                                 * value has been read by the task. */
     };
     using NTF_TYP_E = notify_type_e;
 }

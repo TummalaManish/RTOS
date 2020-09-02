@@ -54,7 +54,7 @@ namespace RTOS{
          * 
          * @return  rtos_thread_priority_t.
          */
-        virtual priority_t  get_priority() const = 0;
+        virtual priority_t              get_priority() const = 0;
 
         /**
          * @brief   Set the thread priority object
@@ -62,14 +62,14 @@ namespace RTOS{
          * @return  eRTOSSuccess if the priority setting is successful.
          * @return  eRTOSSuccess if the priority setting is unsuccessful.
          */
-        virtual return_status_e    set_priority(priority_t) = 0;
+        virtual return_status_e         set_priority(priority_t) = 0;
 
         /**
          * @brief   Get the thread id of the thread.
          *          Returns the thread id of the object.
          * @return  rtos_thread_id_t 
          */ 
-        virtual id_t        get_id() const = 0;
+        virtual id_t                    get_id() const = 0;
 
         /**
          * @brief   Get the thread name.

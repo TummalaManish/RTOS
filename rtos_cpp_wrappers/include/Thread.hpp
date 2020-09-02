@@ -19,31 +19,37 @@ namespace RTOS{
     class Thread : public IThread{
 
     public:
+        /**
+         * @brief   Enumerates the different return types from signal apis.
+         */
         enum class signal_return_values{
-            eTimeOut = 0,
-            eExpectedSignalReceived,
-            eUnexpectedSignalReceived,
+            eTimeOut = 0,                             /**<When the time has passed out of given deadline.             */
+            eExpectedSignalReceived,                  /**<When the Expected signal is received.                       */
+            eUnexpectedSignalReceived,                /**<When an unexpected signal is received.                      */
         };
         using SIG_RET_VAL = signal_return_values;
 
+        /**
+         * @brief   Struct used to pass the notification value that encapsulates both value and time-out status.
+         */
         struct notify_value{
-            bool timed_out;
-            uint32_t received_value;
+            bool timed_out;                           /**<Holds the time-out information of the notification.         */
+            uint32_t received_value;                  /**<Holds the 32-bit notification value.                        */
         };
         using NTF_VALUE_S = struct notify_value;
 
     private:
-        static id_t m_sThreadCount;            /**<Holds the count of the threads that have been created      >*/
+        static id_t m_sThreadCount;                   /**<Holds the count of the threads that have been created       */
 
         /*---------------- Non Static member variables -------------*/
-        status_e           m_threadStatus;            /**<Hold the status of the thread.                             >*/
-        id_t               m_threadId;                /**<Holds the id of the current thread.                        >*/
-        handel_t           m_pHandel;                 /**<Points to the task handle of the created thread.           >*/
-        stack_t            m_pStack;                  /**<Points to the stack of the thread created.                 >*/
-        control_block_t    m_pTaskCb;                 /**<Points to the task's control block.                        >*/
+        status_e           m_threadStatus;            /**<Hold the status of the thread.                              */
+        id_t               m_threadId;                /**<Holds the id of the current thread.                         */
+        handel_t           m_pHandel;                 /**<Points to the task handle of the created thread.            */
+        stack_t            m_pStack;                  /**<Points to the stack of the thread created.                  */
+        control_block_t    m_pTaskCb;                 /**<Points to the task's control block.                         */
     public:
 
-        explicit Thread() = delete;                  /**<Default constructor is deleted.                             >*/
+        explicit Thread() = delete;                  /**<Default constructor is deleted.                              */
 
         /**
          * @breif   Make's a mask with the specified bit set.
@@ -61,7 +67,7 @@ namespace RTOS{
          * @param   thread_stack_size Thread stack size.
          * @param   thread_id Thread id by deafult will be 0.
          */
-        Thread(name_t               thread_name,     /**<Single constructor for the thread class.                    >*/
+        Thread(name_t               thread_name,     /**<Single constructor for the thread class.                     */
                priority_t           thread_priority,
                stack_size_t         thread_stack_size,
                id_t                 thread_id = 0);
