@@ -10,8 +10,7 @@
  * 
  */
 
-#include "rtos_types.hpp"
-#include "portable.h"
+#include <rtos_types.hpp>
 
 namespace RTOS{
 
@@ -98,14 +97,17 @@ namespace RTOS{
          */
         static void release_stack(stack_t ppStack);
 
+        template<typename T>
         /**
          * @brief   Allocates the memory for the FreeRTOS control block.
-         * 
-         * @param   ppTCB [out] This argument will passout the pointer to the allocated TCB
-         * @return  eMemoryResult 
+         *
+         * @param   ppCB [out] This argument will pass in the pointer to the tobe allocated control block.
+         * @return  eMemoryResult Returns eMemAllocationSuccess if the allocation is successful else the opposite.
          */
-        eMemoryResult get_TCB(control_block_t& ppTCB);
-
+        eMemoryResult get_CB(T **ppCB) {
+            *ppCB = static_cast<T*>(pvPortMalloc(sizeof(T)));
+            return *ppCB != nullptr ? eMemAllocationSuccess : eMemAllocationFailed;
+        }
         /**
          * @brief   Frees the allocated TCB of the thread.
          * 
@@ -115,6 +117,6 @@ namespace RTOS{
          * 
          * @param   ppStack pointer to the stack that has been assigned. 
          */
-        static void release_TCB(control_block_t ppTCB);
+        static void release_CB(void * pCB);
     };
 }

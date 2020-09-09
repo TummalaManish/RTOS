@@ -44,10 +44,10 @@ TEST(MemoryManagerTestPositive, AllocatingStack){
 TEST(MemoryManagerTestPositive, AllocatingTask){
 
     RTOS::control_block_t TCB;
-    RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_TCB(TCB);
+    RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_CB(&TCB);
 
     ASSERT_EQ(res, RTOS::eMemoryResult::eMemAllocationSuccess);
-    MemoryManagerMock::get_Instance().release_TCB(TCB);
+    MemoryManagerMock::get_Instance().release_CB(TCB);
 }
 
 TEST(MemoryManagerTestPositive, AllocatingByte){
@@ -78,7 +78,7 @@ TEST(MemoryManagerTestNegative, UnableToAllocateTask){
                                                           configTOTAL_HEAP_SIZE - 32),
               RTOS::eMemoryResult::eMemAllocationSuccess);
     RTOS::control_block_t TCB; //Trying to reserve memory when not available.
-    RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_TCB(TCB);
+    RTOS::eMemoryResult res = MemoryManagerMock::get_Instance().get_CB(&TCB);
 
     ASSERT_EQ(res, RTOS::eMemoryResult::eMemAllocationFailed);
 }

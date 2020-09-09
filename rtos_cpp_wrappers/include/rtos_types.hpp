@@ -40,6 +40,8 @@ namespace RTOS{
  * @brief Base type used for all the rtos operations.
  */
     using base_t = BaseType_t;
+
+    /*------------------------------ Task specific definitions ------------------------------*/
 /**
  * @brief Type used for the thread names.
  */
@@ -60,11 +62,13 @@ namespace RTOS{
 /**
  * @brief Handel for the created thread.
  */
-    using handel_t = TaskHandle_t;
+    using thr_handle_t = TaskHandle_t;
 /**
  * @brief RTOS delay time.
  */
     using delay_t = float;
+    constexpr delay_t wait_forever = 0xffffffffUL * 1000 / configTICK_RATE_HZ; // NOLINT(bugprone-integer-division)
+
 /**
  * @brief Type for the notification value.BaseType_t
  */

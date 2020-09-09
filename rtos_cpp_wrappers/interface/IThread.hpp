@@ -9,7 +9,10 @@
  * 
  */
 
-#include "rtos_types.hpp"
+#ifndef RTOS_CPP_WRAPPER_ITHREAD_HPP
+#define RTOS_CPP_WRAPPER_ITHREAD_HPP
+
+#include <rtos_types.hpp>
 
 namespace RTOS{
 
@@ -20,7 +23,9 @@ namespace RTOS{
     class IThread{
 
     public:
-        /**notify
+
+        virtual ~IThread() = default;
+        /**
          * @brief   Joins the thread to the kernel when invoked.
          */
         virtual void                    join() = 0;
@@ -101,14 +106,14 @@ namespace RTOS{
         virtual return_status_e         thread_delete() = 0;
 
         /**
-         * @breif   Check if the thread is created or had issues while creating the thread.
+         * @brief   Check if the thread is created or had issues while creating the thread.
          *
          * @return  true if the thread is created else false.
          */
         virtual bool                    is_thread_created() const = 0;
 
         /**
-         * @breif   Sets the signal bits specified in the argument.
+         * @brief   Sets the signal bits specified in the argument.
          *          You can use the RTOS::Thread::SIG_BIT() helper function.
          *
          * @param   BITS_TO_SET 32 bit value that has the required bits set.
@@ -116,14 +121,14 @@ namespace RTOS{
         virtual void                    signal_on_bits(uint32_t bitsToSet) = 0;
 
         /**
-         * @breif   Post the value to the thread with an over write.
+         * @brief   Post the value to the thread with an over write.
          *
          * @param   valueToSend 32-bit value that contains the message.
          */
         virtual void                    send_value_with_over_write(uint32_t valueToSend) = 0;
 
         /**
-         * @breif   Posts the value to the thread with out an over write.
+         * @brief   Posts the value to the thread with out an over write.
          *
          * @param   valueToSend 32-bit value that contains the message.
          * @return  eRTOSSuccess if the send was not possible because of a pending notification else eRTOSFailure.
@@ -131,7 +136,7 @@ namespace RTOS{
         virtual RET_STA_E               send_value_with_no_over_write(uint32_t valueToSend) = 0;
 
         /**
-         * @breif   Used to notify the thread that is being operated on.
+         * @brief   Used to notify the thread that is being operated on.
          *
          * @param   notifyValue - Value used as a notification to the thread.
          * @param   actionType - Type of notification(changes the notification register).
@@ -140,3 +145,4 @@ namespace RTOS{
         virtual RET_STA_E               notify(notify_value_t notifyValue , NTF_TYP_E actionType) = 0;
     };
 }
+#endif //RTOS_CPP_WRAPPER_ITHREAD_HPP

@@ -9,7 +9,6 @@
  */
 
 #include <IThread.hpp>
-#include <rtos_types.hpp>
 
 namespace RTOS{
 
@@ -44,7 +43,7 @@ namespace RTOS{
         /*---------------- Non Static member variables -------------*/
         status_e           m_threadStatus;            /**<Hold the status of the thread.                              */
         id_t               m_threadId;                /**<Holds the id of the current thread.                         */
-        handel_t           m_pHandel;                 /**<Points to the task handle of the created thread.            */
+        thr_handle_t       m_pHandle;                 /**<Points to the task handle of the created thread.        */
         stack_t            m_pStack;                  /**<Points to the stack of the thread created.                  */
         control_block_t    m_pTaskCb;                 /**<Points to the task's control block.                         */
     public:
@@ -52,12 +51,12 @@ namespace RTOS{
         explicit Thread() = delete;                  /**<Default constructor is deleted.                              */
 
         /**
-         * @breif   Make's a mask with the specified bit set.
+         * @brief   Make's a mask with the specified bit set.
          *
          * @param   value Any number between 0 and 31.
          * @return  returns a 32 bit value with the bit specied set.
          */
-        static uint32_t SIG_BIT(int value);
+        static uint32_t SIG_BIT(unsigned int value);
 
         /**
          * @brief   Thread constructor.
@@ -72,7 +71,7 @@ namespace RTOS{
                stack_size_t         thread_stack_size,
                id_t                 thread_id = 0);
 
-        ~Thread();
+        ~Thread() override;
         /*------------------ Static Methods -------------------*/
         /**
          * @brief   Starts the freeRTOS scheduler if not running.
@@ -148,17 +147,38 @@ namespace RTOS{
          *
          * @param   signalMask  32 bit mask. Bits set in uint32_t value to receive the signal over.
          * @param   blockTime   Time for which the thread will be placed on blocked list.
-         * @return  SIG_RET_VAL returns one of the enum values.
+         * @return  SIG_RET_VAL returns one of the possible enum values.
          */
-        static SIG_RET_VAL      wait_for_signal_on_bit(uint32_t signalMask, delay_t blockTime);
+        static SIG_RET_VAL      wait_for_signal_on_bits(uint32_t signalMask, delay_t blockTime);
 
         /**
-         * @brief   Waits for a values as a notification.
+         * @brief   Call to this method blocks the thread for the given time or until the
+         *          signal on specified bit is received i.e forever.
+         * 
+         * @param   signalMask  32 bit mask. Bits set in uint32_t value to receive the signal over.
+         * @return SIG_RET_VAL  returns one of the possible enum values.
+         */
+        static SIG_RET_VAL      wait_for_signal_on_bits_blocked(uint32_t signalMask);
+
+        /**
+         * @brief   Call to this method blocks the thread for the given time or until the
+         *          value is received which ever is sooner.
          *
          * @param   blockTime time for which the task will be waiting for the value.
          * @return  returns the NTF_VALUE_S with the received notification.
          */
         static NTF_VALUE_S      wait_for_value(delay_t blockTime);
+
+        /**
+         * @brief   Call to this method blocks the thread for the given time or until the
+         *          value is received i.e forever.
+         * 
+         *          For this method the NTF_VALUE_S.timed_out is always false as there is
+         *          no time out.
+         * 
+         * @return  NTF_VALUE_S Returns the value received as a signal.
+         */
+        static NTF_VALUE_S      wait_for_value_blocked();
 
         /**
          * @brief   thread_run function that all the inherited classes have to implement.

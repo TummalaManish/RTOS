@@ -10,7 +10,7 @@
  * 
  */
 
-#include "MemoryManager.hpp"
+#include <MemoryManager.hpp>
 
 namespace RTOS{
 
@@ -37,16 +37,8 @@ namespace RTOS{
         vPortFree(ppStack);
     }
 
-    /*Note: This is not a const function because we might want to add book keeping feature
-            to the memory manager. Same reason these are not static functions*/
-    eMemoryResult MemoryManager::get_TCB(control_block_t& ppTCB){
-        
-        ppTCB = static_cast<StaticTask_t*>(pvPortMalloc(sizeof(StaticTask_t)));
-        return ppTCB != nullptr ? eMemAllocationSuccess : eMemAllocationFailed;
-    }
-
-    void MemoryManager::release_TCB(control_block_t ppTCB) {
-        vPortFree(ppTCB);
+    void MemoryManager::release_CB(void * pCB) {
+        vPortFree(pCB);
     }
 
     /*Note: This is not a const function because we might want to add book keeping feature
@@ -60,6 +52,7 @@ namespace RTOS{
     void MemoryManager::release_block(void *pMemHolder) {
         vPortFree(pMemHolder);
     }
+
 }
 
 //TODO: How the failed memory allocations have to be dealt with.

@@ -49,7 +49,7 @@ class ThreadS: public RTOS::Thread{
 
     [[noreturn]] void run() override{
         for(;;){
-            RTOS::Thread::SIG_RET_VAL signal_stat = Thread::wait_for_signal_on_bit(SIG_BIT(12), 700);
+            RTOS::Thread::SIG_RET_VAL signal_stat = Thread::wait_for_signal_on_bits(SIG_BIT(12), 700);
             switch (signal_stat){
                 case RTOS::Thread::signal_return_values::eTimeOut:
                     std::cout<<"Signal wait timed out."<<std::endl;

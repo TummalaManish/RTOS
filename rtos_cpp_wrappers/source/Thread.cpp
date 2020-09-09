@@ -31,8 +31,9 @@ namespace RTOS{
                          const stack_size_t thread_stack_size, const id_t thread_id){
         m_pStack = NULL;
         m_pTaskCb = NULL;
-        m_pHandel = NULL;
-        bool result = ((MemoryManager::get_Instance().get_TCB(m_pTaskCb) == eMemoryResult::eMemAllocationSuccess) &&
+        m_pHandle = NULL;
+        bool result = ((MemoryManager::get_Instance().get_CB(&m_pTaskCb)
+                == eMemoryResult::eMemAllocationSuccess) &&
                        (MemoryManager::get_Instance().get_stack(m_pStack, thread_stack_size)
                         == eMemoryResult::eMemAllocationSuccess));
 
@@ -66,9 +67,9 @@ namespace RTOS{
     }
 
     Thread::~Thread() {
-        if (is_scheduler_running()){ vTaskDelete(m_pHandel); }
+        if (is_scheduler_running()){ vTaskDelete(m_pHandle); }
         //Memory for the task has been provided from the heap hence the clean up.
-        MemoryManager::release_TCB(m_pTaskCb);
+        MemoryManager::release_CB(m_pTaskCb);
         MemoryManager::release_stack(m_pStack);
     }
 
@@ -106,10 +107,10 @@ namespace RTOS{
         return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
     }
 
-    Thread::SIG_RET_VAL Thread::wait_for_signal_on_bit(uint32_t signalMask, delay_t blockTime) {
+    Thread::SIG_RET_VAL Thread::wait_for_signal_on_bits(uint32_t signalMask, delay_t blockTime) {
         auto notification_value = static_cast<uint32_t>(0x00);
         Thread::SIG_RET_VAL ret_value;
-        auto time_out_status = xTaskNotifyWait(signalMask, signalMask, &notification_value, blockTime);
+        auto time_out_status = xTaskNotifyWait(signalMask, signalMask, &notification_value, pdMS_TO_TICKS(blockTime));
         uint32_t received_signal = notification_value & signalMask;
         if (time_out_status == pdPASS) {
             if (received_signal == signalMask) {
@@ -125,12 +126,16 @@ namespace RTOS{
         return ret_value;
     }
 
+    Thread::SIG_RET_VAL Thread::wait_for_signal_on_bits_blocked(uint32_t signalMask) {
+        return wait_for_signal_on_bits(signalMask, wait_forever);
+    }
+
     Thread::NTF_VALUE_S Thread::wait_for_value(delay_t blockTime) {
         Thread::NTF_VALUE_S ret_value = {true, static_cast<uint32_t>(0x00)};
         auto time_out_status = xTaskNotifyWait(static_cast<uint32_t>(0x00),
                                                static_cast<uint32_t>(0xFFFFFFFFFFFFFFFF),
                                                &(ret_value.received_value),
-                                               blockTime);
+                                               pdMS_TO_TICKS(blockTime));
         if (time_out_status==pdPASS)
             ret_value.timed_out = false;
         else
@@ -138,8 +143,12 @@ namespace RTOS{
         return ret_value;
     }
 
-    uint32_t Thread::SIG_BIT(const int value) {
-        return ((static_cast<uint32_t>(0x01)) << value);
+    Thread::NTF_VALUE_S Thread::wait_for_value_blocked() {
+        return wait_for_value(wait_forever);
+    }
+
+    uint32_t Thread::SIG_BIT(const unsigned int value) {
+        return ((static_cast<uint32_t>(0x01U)) << value);
     }
 
     void Thread::delay_ms(delay_t delay) {
@@ -151,18 +160,18 @@ namespace RTOS{
     }
 
     priority_t Thread::get_priority() const {
-        return static_cast<priority_t>(uxTaskPriorityGet(m_pHandel));
+        return static_cast<priority_t>(uxTaskPriorityGet(m_pHandle));
     }
 
     //note: partially implemented.
     return_status_e Thread::set_priority(priority_t new_priority) {
         //TODO: This is a bit complicated function has to be implement yet.
-        vTaskPrioritySet(m_pHandel, new_priority);
+        vTaskPrioritySet(m_pHandle, new_priority);
         return RET_STA_E::eRTOSSuccess;
     }
 
     char const *Thread::get_name() const {
-        return static_cast<const char*>(pcTaskGetName(m_pHandel));
+        return static_cast<const char*>(pcTaskGetName(m_pHandle));
     }
 
     status_e Thread::get_status() const {
@@ -170,11 +179,11 @@ namespace RTOS{
     }
 
     void Thread::suspend() const {
-        vTaskSuspend(m_pHandel);
+        vTaskSuspend(m_pHandle);
     }
 
     void Thread::resume() const {
-        vTaskResume(m_pHandel);
+        vTaskResume(m_pHandle);
     }
 
     void Thread::join(){
@@ -196,7 +205,7 @@ namespace RTOS{
 
         /* Justification: The function signature doesn't match the function signature*/
         // clang-format off
-        m_pHandel =  xTaskCreateStatic(start,
+        m_pHandle =  xTaskCreateStatic(start,
                                        block.m_threadName,
                                        block.m_stackSize,
                                        (void *const)(this),
@@ -218,7 +227,7 @@ namespace RTOS{
     }
 
     RET_STA_E Thread::notify(notify_value_t notifyValue, NTF_TYP_E actionType) {
-        base_t ret_val = xTaskNotify(m_pHandel, notifyValue, static_cast<eNotifyAction>(actionType));
+        base_t ret_val = xTaskNotify(m_pHandle, notifyValue, static_cast<eNotifyAction>(actionType));
         if (ret_val == pdPASS) {
             return RET_STA_E::eRTOSSuccess;
         } else {
@@ -227,15 +236,15 @@ namespace RTOS{
     }
 
     void Thread::signal_on_bits(uint32_t bitsToSet) {
-        (void) xTaskNotify(m_pHandel, bitsToSet, static_cast<eNotifyAction>(NTF_TYP_E::eSetBits));
+        (void) xTaskNotify(m_pHandle, bitsToSet, static_cast<eNotifyAction>(NTF_TYP_E::eSetBits));
     }
 
     void Thread::send_value_with_over_write(uint32_t valueToSend) {
-        (void) xTaskNotify(m_pHandel, valueToSend, static_cast<eNotifyAction>(NTF_TYP_E::eSetValueWithOverwrite));
+        (void) xTaskNotify(m_pHandle, valueToSend, static_cast<eNotifyAction>(NTF_TYP_E::eSetValueWithOverwrite));
     }
 
     RET_STA_E Thread::send_value_with_no_over_write(uint32_t valueToSend) {
-        base_t ret_value = xTaskNotify(m_pHandel, valueToSend,
+        base_t ret_value = xTaskNotify(m_pHandle, valueToSend,
                                        static_cast<eNotifyAction>(NTF_TYP_E::eSetValueWithoutOverwrite));
         return ret_value == pdPASS ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
     }
