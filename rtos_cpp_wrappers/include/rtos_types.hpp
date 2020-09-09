@@ -25,6 +25,11 @@
 /*--------------------------------------------------------*/
 #include <cstdint>
 
+/*-------------------- Defines ---------------------------*/
+#ifndef debug_break
+#define debug_break __debugbreak()
+#endif
+
 namespace RTOS{
 /**
  * @brief Type used for rtos thread priories.
@@ -130,5 +135,14 @@ namespace RTOS{
                                                                  * value has been read by the task. */
     };
     using NTF_TYP_E = notify_type_e;
+    /*----------------------------------------------------------------------------------------*/
+
+    /*-------------------------------- Queue definitions -------------------------------------*/
+/**
+ * @brief   Handel for the queues.
+ */
+    using que_handle_t = QueueHandle_t;
+
+    using queue_cb_t = StaticQueue_t*;
 }
 #endif //Closing RTOS_TYPES_HPP.

@@ -55,12 +55,13 @@ namespace RTOS{
 
 }
 
+// clang-format off
 //TODO: How the failed memory allocations have to be dealt with.
 extern "C" void vApplicationMallocFailedHook(void);
 void vApplicationMallocFailedHook(void){
     //TODO: memory allocation fails have to the handled more appropriately.
 #ifndef SIM
-    __debugbreak();
+    debug_break;
 #endif
 }
-
+// clang-format on

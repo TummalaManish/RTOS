@@ -29,9 +29,9 @@ namespace RTOS{
 
     RTOS::Thread::Thread(const name_t thread_name, const priority_t thread_priority,
                          const stack_size_t thread_stack_size, const id_t thread_id){
-        m_pStack = NULL;
-        m_pTaskCb = NULL;
-        m_pHandle = NULL;
+        m_pStack = nullptr;
+        m_pTaskCb = nullptr;
+        m_pHandle = nullptr;
         bool result = ((MemoryManager::get_Instance().get_CB(&m_pTaskCb)
                 == eMemoryResult::eMemAllocationSuccess) &&
                        (MemoryManager::get_Instance().get_stack(m_pStack, thread_stack_size)
@@ -61,7 +61,7 @@ namespace RTOS{
             m_threadStatus = THR_STA_E::eMemoryAllocationFailed;
 #ifdef DBG_BRK
             //Have to use te BASE versioned debug interface.
-            __debugbreak();
+            debug_break;
 #endif //Ending the DBG_BRK.
         }
     }
@@ -81,10 +81,10 @@ namespace RTOS{
             /*--------- Execution should never come here -----------*/
             //TODO: Invalid thread exit. The thread will be cleaned up and this has
             //      to be logged. Once the logger is implemented.
-            __debugbreak();
+            debug_break;
         }
         else{
-            __debugbreak();
+            debug_break;
         }
     }
 
