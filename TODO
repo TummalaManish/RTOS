@@ -5,7 +5,8 @@ TODO: 2 All the task block status have to be addeed here.
 ✔ Thread has to be re-designed to use freertos API with out any modifications. @done(20-08-22 14:15)
 ✔ Signals have to be implemented in thread. @started(20-08-29 11:55) @done(20-09-01 13:59) @lasted(3d2h4m55s)
 ☐ TODO: Have to implement ISR safe unblocking functions.
-☐ Implement warppers for the queue items. @started(20-09-02 12:43)
+✔ Implement warppers for the queue items. @started(20-09-02 12:43) @done(20-09-10 01:47) @lasted(1w13h4m35s)
 ✔ Implement the virtual destructors. @started(20-09-08 23:27) @done(20-09-09 13:37) @lasted(14h10m32s)
 ✔ Refactor the memory manager to add alloctions for control block. @started(20-09-08 23:28) @done(20-09-09 13:37) @lasted(14h9m39s)
-✔ Queue warppers implementation. @started(20-09-08 23:28) @done(20-09-09 23:20) @lasted(23h52m47s)
+☐ Have to refactor the rtos_types.hpp file for a better fluidity.
+☐ Cmake build scripts need refactor and redesign for fluidity.

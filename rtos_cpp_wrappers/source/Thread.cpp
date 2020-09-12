@@ -9,8 +9,8 @@
  * 
  */
 
-#include <MemoryManager.hpp>
-#include <Thread.hpp>
+#include "MemoryManager.hpp"
+#include "Thread.hpp"
 
 namespace RTOS{
 

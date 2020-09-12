@@ -12,7 +12,7 @@
 #ifndef RTOS_CPP_WRAPPER_ITHREAD_HPP
 #define RTOS_CPP_WRAPPER_ITHREAD_HPP
 
-#include <rtos_types.hpp>
+#include "rtos_types.hpp"
 
 namespace RTOS{
 

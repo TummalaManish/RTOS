@@ -9,8 +9,8 @@
  * 
  */
 
-#include <MemoryManager.hpp>
-#include <Queue.hpp>
+#include "MemoryManager.hpp"
+#include "Queue.hpp"
 
 namespace RTOS {
 
