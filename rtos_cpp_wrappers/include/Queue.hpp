@@ -9,6 +9,9 @@
  * 
  */
 
+#ifndef RTOS_QUEUE_HPP
+#define RTOS_QUEUE_HPP
+
 #include "IQueue.hpp"
 
 namespace RTOS{
@@ -43,3 +46,4 @@ namespace RTOS{
 
     };
 }
+#endif //RTOS_THREAD_HPP

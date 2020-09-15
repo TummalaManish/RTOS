@@ -19,17 +19,19 @@
 // APP Section:
 class ThreadM : public RTOS::Thread{
 
-    IThread& m_slaveThread;
+    IThread& m_slaveThread_thr;
+    ISignal& m_slaveThread_sig;
+
     /*Inherited functions*/
     [[noreturn]] void run() override{
-        m_slaveThread.join();
+        m_slaveThread_thr.join();
         for(;;){
             // Signal the thread directly with no block on bit-12.
-            m_slaveThread.signal_on_bits(SIG_BIT(12));
+            m_slaveThread_sig.signal_on_bits(SIG_BIT(12));
             // Give time for the slave to run its course.
             RTOS::Thread::delay_ms(100);
             // Signal the slave on the wrong signal bit.
-            m_slaveThread.signal_on_bits(SIG_BIT(13));
+            m_slaveThread_sig.signal_on_bits(SIG_BIT(13));
             // Wait for the slave signal to record a miss in the signal.
             RTOS::Thread::delay_ms(1000);
             std::cout<<"Ending the test.";
@@ -41,7 +43,7 @@ class ThreadM : public RTOS::Thread{
     RTOS::return_status_e thread_delete() override{ return RTOS::return_status_e::eRTOSSuccess; }
 
 public:
-    explicit ThreadM(IThread& slaveThread): m_slaveThread(slaveThread),
+    explicit ThreadM(Thread& slaveThread): m_slaveThread_thr(slaveThread), m_slaveThread_sig(slaveThread),
     Thread("Master Thread", 5, 400) {}
 };
 

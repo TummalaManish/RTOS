@@ -8,14 +8,18 @@
  * @copyright   Copyright (c) 2020
  */
 
+#ifndef RTOS_THREAD_HPP
+#define RTOS_THREAD_HPP
+
 #include "IThread.hpp"
+#include "ISignal.hpp"
 
 namespace RTOS{
 
     /**
      * @brief This class implements the thread i.e. the wrapper for the FreeRTOS Task.
      */
-    class Thread : public IThread{
+    class Thread : public IThread, public ISignal{
 
     public:
         /**
@@ -54,7 +58,7 @@ namespace RTOS{
          * @brief   Make's a mask with the specified bit set.
          *
          * @param   value Any number between 0 and 31.
-         * @return  returns a 32 bit value with the bit specied set.
+         * @return  returns a 32 bit value with the bit specified set.
          */
         static uint32_t SIG_BIT(unsigned int value);
 
@@ -64,7 +68,7 @@ namespace RTOS{
          * @param   thread_name Name of the thread.
          * @param   thread_priority Thread priority.
          * @param   thread_stack_size Thread stack size.
-         * @param   thread_id Thread id by deafult will be 0.
+         * @param   thread_id Thread id by default will be 0.
          */
         Thread(name_t               thread_name,     /**<Single constructor for the thread class.                     */
                priority_t           thread_priority,
@@ -137,7 +141,7 @@ namespace RTOS{
          * @return  RET_STA_E           True if the notification is received well before the time-out else false.
          */
         static RET_STA_E        wait_for_notification(uint32_t entryClearMask, uint32_t exitClearMask,
-                                                      delay_t msDelay, uint32_t* pNotificationValue = NULL);
+                                                      delay_t msDelay, uint32_t* pNotificationValue = nullptr);
         /**
          * @brief   Call to this method blocks the thread for the given time or until the
          *          signal on specified bit is received which ever is sooner.
@@ -186,3 +190,4 @@ namespace RTOS{
         virtual void            run() = 0;
     };
 }
+#endif //RTOS_THREAD_HPP

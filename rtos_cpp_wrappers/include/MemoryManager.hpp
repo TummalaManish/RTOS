@@ -10,6 +10,9 @@
  * 
  */
 
+#ifndef RTOS_MEM_MNG_HPP
+#define RTOS_MEM_MNG_HPP
+
 #include "rtos_types.hpp"
 
 namespace RTOS{
@@ -120,3 +123,4 @@ namespace RTOS{
         static void release_CB(void * pCB);
     };
 }
+#endif //RTOS_MEM_MNG_HPP

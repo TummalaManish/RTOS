@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef RTOS_CPP_WRAPPER_ITHREAD_HPP
-#define RTOS_CPP_WRAPPER_ITHREAD_HPP
+#ifndef RTOS_ITHREAD_HPP
+#define RTOS_ITHREAD_HPP
 
 #include "rtos_types.hpp"
 
@@ -112,37 +112,6 @@ namespace RTOS{
          */
         virtual bool                    is_thread_created() const = 0;
 
-        /**
-         * @brief   Sets the signal bits specified in the argument.
-         *          You can use the RTOS::Thread::SIG_BIT() helper function.
-         *
-         * @param   BITS_TO_SET 32 bit value that has the required bits set.
-         */
-        virtual void                    signal_on_bits(uint32_t bitsToSet) = 0;
-
-        /**
-         * @brief   Post the value to the thread with an over write.
-         *
-         * @param   valueToSend 32-bit value that contains the message.
-         */
-        virtual void                    send_value_with_over_write(uint32_t valueToSend) = 0;
-
-        /**
-         * @brief   Posts the value to the thread with out an over write.
-         *
-         * @param   valueToSend 32-bit value that contains the message.
-         * @return  eRTOSSuccess if the send was not possible because of a pending notification else eRTOSFailure.
-         */
-        virtual RET_STA_E               send_value_with_no_over_write(uint32_t valueToSend) = 0;
-
-        /**
-         * @brief   Used to notify the thread that is being operated on.
-         *
-         * @param   notifyValue - Value used as a notification to the thread.
-         * @param   actionType - Type of notification(changes the notification register).
-         * @return  eRTOSSuccess is returned if the notification has been sent to the thread.
-         */
-        virtual RET_STA_E               notify(notify_value_t notifyValue , NTF_TYP_E actionType) = 0;
     };
 }
-#endif //RTOS_CPP_WRAPPER_ITHREAD_HPP
+#endif //RTOS_ITHREAD_HPP
