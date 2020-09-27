@@ -9,5 +9,8 @@
     "cmake.configureArgs": [
         "-DTEST=ON",
         "-DSIM=ON",
-    ]
+    ],
+    "files.associations": {
+        "iostream": "cpp"
+    }
 }
