@@ -249,6 +249,10 @@ namespace RTOS{
         return ret_value == pdPASS ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
     }
 
+    RET_STA_E Thread::thread_delete() {
+        return RET_STA_E::eRTOSSuccess;
+    }
+
 }
 
 extern "C" void vApplicationGetIdleTaskMemory(StaticTask_t ** ppxIdleTaskTCBBuffer,

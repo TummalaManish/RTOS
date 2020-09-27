@@ -20,7 +20,7 @@ namespace RTOS{
 
         /*---------------------- Non-static data members -------------------------*/
         que_handle_t m_pHandle;                             /**< Holds the pointer to the queue handle                */
-        queue_cb_t m_pQueueCB;                                 /**< Holds pointer buffer for the queue control block     */
+        queue_cb_t m_pQueueCB;                              /**< Holds pointer buffer for the queue control block     */
         uint8_t * m_pBuffer;                                /**< Holds pointer buffer for the entire queue            */
 
     public:
@@ -33,7 +33,7 @@ namespace RTOS{
         Queue(base_t queue_length, base_t item_length);
 
         /* destructor */
-        virtual ~Queue();
+        virtual ~Queue() override;
         /*-------------------------- Inherited methods ---------------------------*/
         RET_STA_E               place_item_at_front(const void * pv_item_to_queue, delay_t wait_time) override;
         void                    place_item_at_front_blocked(const void * pv_item_to_queue) override;

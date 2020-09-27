@@ -21,7 +21,7 @@ namespace RTOS {
     class IQueue {
 
     public:
-        virtual ~IQueue() = 0;
+        virtual ~IQueue() = default;
 
         /**
          * @brief   Places the item at the front of the queue.

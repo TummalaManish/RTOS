@@ -36,6 +36,7 @@ namespace RTOS{
          * @brief   Struct used to pass the notification value that encapsulates both value and time-out status.
          */
         struct notify_value{
+            // The below wiggles are due to problem with the cpp-check.
             bool timed_out;                           /**<Holds the time-out information of the notification.         */
             uint32_t received_value;                  /**<Holds the 32-bit notification value.                        */
         };
@@ -115,6 +116,9 @@ namespace RTOS{
         bool                    is_thread_created() const override;
         RET_STA_E               notify(notify_value_t, NTF_TYP_E) override;
         void                    join() override;
+        // This is a simple default implementation inheriting class have to override.
+        RET_STA_E               thread_delete() override;
+
 
 
     protected:
