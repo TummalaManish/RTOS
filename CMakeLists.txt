@@ -1,33 +1,49 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(RTOS_CPP_WRAPPER)
-
-# Variables that'll be used with the project.
-include(useroptions.cmake)
-
-if (SIM)
-    # Adds SIM macro to the target.
-    add_compile_definitions("SIM")
-endif()
-
+project(RTOS_CPP_WRAPPER VERSION 0.0.0)
+# Selecting windows simulator for un-specifed configurations.
 if (NOT DEFINED PORT_SELECT)
-    # Selects the appropriate port base.
-    set(PORT_SELECT "WIN_SIM")
+  set(PORT_SELECT "WIN_SIM")
+  # TODO: Have to remove this and palaced as target compile def.
+  add_compile_definitions("SIM")
 endif()
-
-# This is the root directory that builds the core library.
-add_subdirectory(rtos_cpp_wrappers)
-
 # This the FreeRTOS kernel.
 add_subdirectory(rtos_c)
+# This is the root directory that builds the core library.
+add_subdirectory(rtosCppWrappers)
 
-if(TEST)
-    # This is the library for the gtest.
-    add_subdirectory(googletest)
+# Check if there is a parent directory to the current directory.
+get_directory_property(USR_IS_CHILD PARENT_DIRECTORY)
 
-    # Test directory for the functional tests.
-    add_subdirectory(func_test)
+if (USR_IS_CHILD) 
+  # Directory has a parent.
+  # UnitTest configuration.
+  if (CMAKE_BUILD_TYPE STREQUAL "UnitTest")
+    if (NOT(${PORT_SELECT} STREQUAL "WIN_SIM"))
+      message(FATAL_ERROR "${PORT_SELECT} is not a appropriate option for kernel port.")
+    endif()
+    add_subdirectory(unitTests)
+    add_subdirectory(funcTests)
+  # Analysis configuration.
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Analysis")
+    # TODO: Add analysis configuration.
+  # Alternative configuration.
+  else()
+    message(FATAL_ERROR "${CMAKE_BUILD_TYPE} is not supported.")
+  endif()
 
-    # Test directory for the unit tests.
-    add_subdirectory(unit_test)
+else()
+  # This is the parent diretory.
+  include(buildSupport/unitTestsInfra.cmake)
+  # UnitTest configuration.
+  if (CMAKE_BUILD_TYPE STREQUAL "UnitTest")
+  set(USR_INC_TST_DIRS unitTests funcTests)
+  createUnitTestExe(USR_INC_TST_DIRS)
+  # Analysis configuration.
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Analysis")
+    # TODO: Have to add Analysis cmake-infra.
+  # Alternative configuration.
+  else()
+  message(FATAL_ERROR "${CMAKE_BUILD_TYPE} is not supported.")
+  endif()
 endif()

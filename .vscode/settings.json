@@ -1,16 +1,60 @@
 {
-    "cmake.configureOnOpen": false,
-    "cSpell.words": [
-        "OPTIMISED",
-        "xtaskhandle"
-    ],
-    "cSpell.language": "en,en-US",
-    
-    "cmake.configureArgs": [
-        "-DTEST=ON",
-        "-DSIM=ON",
-    ],
-    "files.associations": {
-        "iostream": "cpp"
-    }
+  // CSPELL CONFIGUARTION.
+  "cSpell.words": [
+    "OPTIMISED",
+    "xtaskhandle"
+  ],
+  "cSpell.language": "en,en-US",
+  "files.associations": {
+    "iostream": "cpp"
+  },
+  // EDITOR SETTINGS
+  "editor.rulers": [
+    80,
+  ],
+  "[json]": {
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "[cpp]": {
+    "editor.wordBasedSuggestions": true,
+    "editor.suggest.insertMode": "replace",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[c]": {
+    "editor.wordBasedSuggestions": true,
+    "editor.suggest.insertMode": "replace",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[cmake]": {
+    "editor.tabSize": 2,
+  },
+  // CPP CONFIGURATION.
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  // CPP static analysis tool settings.
+  "c-cpp-flylint.flexelint.enable": false,
+  "c-cpp-flylint.clang.enable": false,
+  "c-cpp-flylint.cppcheck.enable": true,
+  "c-cpp-flylint.cppcheck.verbose": true,
+  // TODO: Misra c++ rules text file has to be added to the linting.
+  // "c-cpp-flylint.cppcheck.addons": [
+  //     "SUPPORT/toolSupportFiles/cppcheck/cpp_misra.json"
+  // ],
+  // CMAKE CONFIGURATION.
+  "cmake.buildDirectory": "${workspaceFolder}/0_Build/vscode",
+  "cmake.configureOnOpen": false,
+  // CMake defines.
+  "cmake.configureArgs": [
+    "-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON",
+    // "-DUSR_SUPP_DIR=${workspaceFolder}/SUPPORT",
+  ],
+  // CMake Generators.
+  "cmake.generator": "MinGW Makefiles",
+  // "cmake.generator": "Ninja Multi-Config",
+  // Test Explorer configuration.
+  "testMate.cpp.test.executables": "{build,0_Build,BUILD,out,Out,OUT}/**/*{test,Test,TEST}*"
 }
