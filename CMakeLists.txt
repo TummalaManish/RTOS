@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(RTOS_CPP_WRAPPER VERSION 0.0.0)
-# Selecting windows simulator for un-specifed configurations.
+# Selecting windows simulator for un-specified configurations.
 if (NOT DEFINED PORT_SELECT)
   set(PORT_SELECT "WIN_SIM")
-  # TODO: Have to remove this and palaced as target compile def.
+  # TODO: Have to remove this and placed as target compile def.
   add_compile_definitions("SIM")
 endif()
 # This the FreeRTOS kernel.
@@ -33,7 +33,7 @@ if (USR_IS_CHILD)
   endif()
 
 else()
-  # This is the parent diretory.
+  # This is the parent directory.
   include(buildSupport/unitTestsInfra.cmake)
   # UnitTest configuration.
   if (CMAKE_BUILD_TYPE STREQUAL "UnitTest")

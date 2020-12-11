@@ -21,7 +21,7 @@ using msg = struct msg;
 
 class RThread : public RTOS::Thread {
 public:
-  explicit RThread(RTOS::IQueue &r_que)
+  explicit RThread(RTOS::IQueueReceiver &r_que)
       : m_Iqueue(r_que), m_tempHolder(), Thread("RcvThr", 1, 100) {}
 
 private:
@@ -32,19 +32,19 @@ private:
       if (cnt == 3)
         end_scheduler();
       // Waiting or the message from the sender.
-      m_Iqueue.get_item_blocked(static_cast<void *>(&m_tempHolder));
+      m_Iqueue.dequeue(static_cast<void *>(&m_tempHolder));
       std::cout << "Message " << static_cast<int>(m_tempHolder.msgId) << ": "
                 << static_cast<const char *>(m_tempHolder.name) << std::endl;
       ++cnt;
     }
   }
-  RTOS::IQueue &m_Iqueue;
+  RTOS::IQueueReceiver &m_Iqueue;
   msg m_tempHolder{};
 };
 
 class SThread : public RTOS::Thread {
 public:
-  SThread(RTOS::IQueue &r_que, RTOS::IThread &r_thr)
+  SThread(RTOS::IQueueSender &r_que, RTOS::IThread &r_thr)
       : m_Iqueue(r_que), m_Islave(r_thr), Thread("SndThr", 1, 100) {}
 
 private:
@@ -55,13 +55,13 @@ private:
     m_Islave.join();
     for (;;) {
       for (int i = 0; i < 3; ++i) {
-        m_Iqueue.place_item_at_back_blocked(&msg_lst[i]);
+        m_Iqueue.enqueue(&msg_lst[i]);
       }
       suspend();
     }
   }
 
-  RTOS::IQueue &m_Iqueue;
+  RTOS::IQueueSender &m_Iqueue;
   RTOS::IThread &m_Islave;
 };
 

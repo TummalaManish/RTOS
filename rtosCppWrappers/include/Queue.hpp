@@ -12,11 +12,12 @@
 #ifndef RTOS_QUEUE_HPP
 #define RTOS_QUEUE_HPP
 
-#include "IQueue.hpp"
+#include "IQueueSender.hpp"
+#include "IQueueReceiver.hpp"
 
 namespace RTOS {
 
-class Queue : public IQueue {
+class Queue : public IQueueSender, public IQueueReceiver {
 
   /*---------------------- Non-static data members -------------------------*/
   que_handle_t m_pHandle; /**< Holds the pointer to the queue handle */
@@ -34,18 +35,20 @@ public:
   Queue(base_t queue_length, base_t item_length);
 
   /* destructor */
-  virtual ~Queue() override;
-  /*-------------------------- Inherited methods ---------------------------*/
-  RET_STA_E place_item_at_front(const void *pv_item_to_queue,
+  ~Queue() override;
+  /*------------------------- Inherited from sender --------------------------*/
+  RET_STA_E enqueue_to_front(const void *constpv_item_to_queue,
                                 delay_t wait_time) override;
-  void place_item_at_front_blocked(const void *pv_item_to_queue) override;
-  RET_STA_E place_item_at_back(const void *pv_item_to_queue,
+  void enqueue_to_front(const void *pv_item_to_queue) override;
+  RET_STA_E enqueue(const void *constpv_item_to_queue,
                                delay_t wait_time) override;
-  void place_item_at_back_blocked(const void *pv_item_to_queue) override;
-  RET_STA_E get_item(void *pv_buffer, delay_t wait_time) override;
-  void get_item_blocked(void *pv_buffer) override;
-  RET_STA_E look_at_item(void *pv_buffer, delay_t wait_time) override;
-  void look_at_item_blocked(void *buffer) override;
+  void enqueue(const void *pv_item_to_queue) override;
+  
+  /*------------------------ Inherited from receiver -------------------------*/
+  RET_STA_E dequeue(void *constpv_buffer, delay_t wait_time) override;
+  void dequeue(void *pv_buffer) override;
+  RET_STA_E peek(void *constpv_buffer, delay_t wait_time) override;
+  void peek(void *buffer) override;
 };
 } // namespace RTOS
 #endif // RTOS_THREAD_HPP

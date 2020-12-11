@@ -12,7 +12,10 @@
 #ifndef TQUEUE_RTOS_HPP
 #define TQUEUE_RTOS_HPP
 
-#include "IQueue.hpp"
+#include "IQueueReceiver.hpp"
+#include "IQueueSender.hpp"
+
+
 #include "MemoryManager.hpp"
 
 namespace RTOS {
@@ -23,7 +26,8 @@ namespace RTOS {
  * @tparam T    Type of the queue item.
  * @tparam N    Number of queue items to hold.
  */
-template <typename T, size_t N> class TQueue : public IQueue {
+template <typename T, size_t N>
+class TQueue : public IQueueSender, public IQueueReceiver {
 
   /*---------------------- Non-static data members -------------------------*/
   que_handle_t m_pHandle; /**< Holds the pointer to the queue handle */
@@ -57,7 +61,7 @@ public:
   }
 
   /*-------------------------- Inherited methods ---------------------------*/
-  RET_STA_E place_item_at_front(const void *const pv_item_to_queue,
+  RET_STA_E enqueue_to_front(const void *const pv_item_to_queue,
                                 delay_t wait_time) override {
     auto ret_val = xQueueSendToFront(m_pHandle, pv_item_to_queue,
                                      pdMS_TO_TICKS(wait_time));
@@ -65,12 +69,11 @@ public:
                              : RET_STA_E::eRTOSFailure;
   }
 
-  void
-  place_item_at_front_blocked(const void *const pv_item_to_queue) override {
-    (void)place_item_at_front(pv_item_to_queue, wait_forever);
+  void enqueue_to_front(const void *const pv_item_to_queue) override {
+    (void)enqueue_to_front(pv_item_to_queue, wait_forever);
   }
 
-  RET_STA_E place_item_at_back(const void *const pv_item_to_queue,
+  RET_STA_E enqueue(const void *const pv_item_to_queue,
                                delay_t wait_time) override {
     auto ret_val =
         xQueueSendToBack(m_pHandle, pv_item_to_queue, pdMS_TO_TICKS(wait_time));
@@ -78,29 +81,29 @@ public:
                              : RET_STA_E::eRTOSFailure;
   }
 
-  void place_item_at_back_blocked(const void *const pv_item_to_queue) override {
-    (void)place_item_at_back(pv_item_to_queue, wait_forever);
+  void enqueue(const void *const pv_item_to_queue) override {
+    (void)enqueue(pv_item_to_queue, wait_forever);
   }
 
-  RET_STA_E get_item(void *const pv_buffer, delay_t wait_time) override {
+  RET_STA_E dequeue(void *const pv_buffer, delay_t wait_time) override {
     auto ret_val =
         xQueueReceive(m_pHandle, pv_buffer, pdMS_TO_TICKS(wait_time));
     return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess
                              : RET_STA_E::eRTOSFailure;
   }
 
-  void get_item_blocked(void *const pv_buffer) override {
-    (void)get_item(pv_buffer, pdMS_TO_TICKS(wait_forever));
+  void dequeue(void *const pv_buffer) override {
+    (void)dequeue(pv_buffer, pdMS_TO_TICKS(wait_forever));
   }
 
-  RET_STA_E look_at_item(void *const pv_buffer, delay_t wait_time) override {
+  RET_STA_E peek(void *const pv_buffer, delay_t wait_time) override {
     auto ret_val = xQueuePeek(m_pHandle, pv_buffer, pdMS_TO_TICKS(wait_time));
     return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess
                              : RET_STA_E::eRTOSFailure;
   }
 
-  void look_at_item_blocked(void *const buffer) override {
-    (void)look_at_item(buffer, pdMS_TO_TICKS(wait_forever));
+  void peek(void *const buffer) override {
+    (void)peek(buffer, pdMS_TO_TICKS(wait_forever));
   }
 };
 } // namespace RTOS

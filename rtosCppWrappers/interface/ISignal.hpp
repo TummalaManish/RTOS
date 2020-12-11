@@ -21,8 +21,26 @@
 namespace RTOS {
 class ISignal {
 public:
-  virtual ~ISignal() = default;
+  /**
+   * @brief   Different notification action types.
+   */
+  enum class notify_type_e {
+    eNoAction =
+        eNoAction, /* Notify the task without updating its notify value. */
+    eSetBits = eSetBits,     /* Set bits in the task's notification value.*/
+    eIncrement = eIncrement, /* Increment the task's notification value. */
+    eSetValueWithOverwrite =
+        eSetValueWithOverwrite, /* Set the task's notification value to a
+                                 * specific value even if the* previous value
+                                 * has not yet been read by the task. */
+    eSetValueWithoutOverwrite =
+        eSetValueWithoutOverwrite /* Set the task's notification value if the
+                                   * previous value has been read by the task.
+                                   */
+  };
+  using NTF_TYP_E = notify_type_e;
 
+  virtual ~ISignal() = default;
   /**
    * @brief   Sets the signal bits specified in the argument.
    *          You can use the RTOS::Thread::SIG_BIT() helper function.
@@ -42,8 +60,8 @@ public:
    * @brief   Posts the value to the thread with out an over write.
    *
    * @param   valueToSend 32-bit value that contains the message.
-   * @return  eRTOSSuccess if the send was not possible because of a pending
-   * notification else eRTOSFailure.
+   * @return  eRTOSFailure if the send was not possible because of a pending
+   * notification else eRTOSSuccess.
    */
   virtual RET_STA_E send_value_with_no_over_write(uint32_t valueToSend) = 0;
 

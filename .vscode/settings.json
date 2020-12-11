@@ -6,7 +6,12 @@
   ],
   "cSpell.language": "en,en-US",
   "files.associations": {
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "thread": "cpp",
+    "memory_resource": "cpp",
+    "shared_mutex": "cpp",
+    "*.inc": "cpp",
+    "*.def": "cpp"
   },
   // EDITOR SETTINGS
   "editor.rulers": [
@@ -49,7 +54,8 @@
   "cmake.configureOnOpen": false,
   // CMake defines.
   "cmake.configureArgs": [
-    "-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON",
+    // "--graphviz=${workspaceFolder}/0_Build/vscode/some.dot",
+    // "-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON",
     // "-DUSR_SUPP_DIR=${workspaceFolder}/SUPPORT",
   ],
   // CMake Generators.

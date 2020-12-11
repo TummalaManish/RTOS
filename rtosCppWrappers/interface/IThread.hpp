@@ -15,13 +15,26 @@
 #include "rtos_types.hpp"
 
 namespace RTOS {
+/**
+ * @brief Type used to identify thread status.
+ */
+enum class status_e {
+  eNoStatus = 0,
+  eMemoryAllocationFailed = 1,
+  eBlockedByChoice = 2,
+  eThreadNotStarted = 4,
+  eThreadStarted = 8,
+  eThreadCreationFailed = 9,
+  // Note: All the status have to be less than eInvalidStatus.
+  eInvalidStatus,
+};
+using THR_STA_E = status_e;
 
 /**
  * @brief Interface class for the Thread objects.
  *
  */
 class IThread {
-
 public:
   virtual ~IThread() = default;
   /**

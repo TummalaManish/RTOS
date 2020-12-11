@@ -17,11 +17,18 @@
 namespace RTOS {
 
 /**
+ * @brief Enumerates the scheduler status.
+ */
+enum class scheduler_status_e {
+  eSchedulerNotRunning = 0,
+  eSchedulerRunning = 1,
+};
+using SCH_STA_E = scheduler_status_e;
+/**
  * @brief This class implements the thread i.e. the wrapper for the FreeRTOS
  * Task.
  */
 class Thread : public IThread, public ISignal {
-
 public:
   /**
    * @brief   Enumerates the different return types from signal apis.
@@ -45,18 +52,22 @@ public:
   using NTF_VALUE_S = struct notify_value;
 
 private:
-  static id_t m_sThreadCount; /**<Holds the count of the threads that have been
-                                 created       */
+  /**
+   * @brief   Thread starter functions that'll be passed into the kernel.
+   */
+  static void start(void *);
 
+  static id_t m_sThreadCount; /**<Holds the count of the threads that have been
+                                 created*/
   /*---------------- Non Static member variables -------------*/
   status_e m_threadStatus; /**<Hold the status of the thread. */
-  id_t m_threadId;         /**<Holds the id of the current thread.         */
-  thr_handle_t
-      m_pHandle; /**<Points to the task handle of the created thread.        */
-  stack_t m_pStack;          /**<Points to the stack of the thread created.          */
-  control_block_t m_pTaskCb; /**<Points to the task's control block. */
+  id_t m_threadId;         /**<Holds the id of the current thread.*/
+  thr_handle_t m_pHandle; /**<Points to the task handle of the created thread.*/
+  stack_t m_pStack;       /**<Points to the stack of the thread created.*/
+  control_block_t m_pTaskCb; /**<Points to the task's control block.*/
+
 public:
-  explicit Thread() = delete; /**<Default constructor is deleted. */
+  explicit Thread() = delete; /**<Default constructor is deleted.*/
 
   /**
    * @brief   Make's a mask with the specified bit set.
@@ -96,30 +107,24 @@ public:
    */
   static bool is_scheduler_running();
 
-private:
-  /**
-   * @brief   Thread starter functions that'll be passed into the kernel.
-   */
-  static void start(void *);
-
-public:
   /*---- Methods that are from the IThread interface ----*/
   id_t get_id() const override;
   priority_t get_priority() const override;
   return_status_e set_priority(priority_t) override;
   char const *get_name() const override;
   status_e get_status() const override;
-
-  void signal_on_bits(uint32_t bitsToSet) override;
-  void send_value_with_over_write(uint32_t valueToSend) override;
-  RET_STA_E send_value_with_no_over_write(uint32_t valueToSend) override;
   void suspend() const override;
   void resume() const override;
   bool is_thread_created() const override;
-  RET_STA_E notify(notify_value_t, NTF_TYP_E) override;
   void join() override;
   // This is a simple default implementation inheriting class have to override.
   RET_STA_E thread_delete() override;
+
+  /*---- Methods inhereted from the ISignal interface ----*/
+  void signal_on_bits(uint32_t bitsToSet) override;
+  void send_value_with_over_write(uint32_t valueToSend) override;
+  RET_STA_E send_value_with_no_over_write(uint32_t valueToSend) override;
+  RET_STA_E notify(notify_value_t, NTF_TYP_E) override;
 
 protected:
   /**
@@ -129,11 +134,10 @@ protected:
   /**
    * @brief   Calling this function will move the thread to blocked state for a
    *          given amount of time.
-   * @param   This should be a non-negative value describing the number of milli
-   *          -seconds the thread has to be in blocked state before being
-   * resumed.
+   * @param   delay This should be a non-negative value describing the number of
+   * milli-seconds the thread has to be in blocked state before being resumed.
    */
-  static void delay_ms(delay_t);
+  static void delay_ms(delay_t delay);
   /**
    * @brief   Call to this member paces the thread in blocked state till the
    * thread is notified by some other task or the time-out expires.

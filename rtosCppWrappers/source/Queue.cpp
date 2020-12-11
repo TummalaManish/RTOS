@@ -35,44 +35,44 @@ Queue::~Queue() {
   MemoryManager::release_block(m_pBuffer);
 }
 
-RET_STA_E Queue::place_item_at_front(const void *const pv_item_to_queue,
-                                     delay_t wait_time) {
+RET_STA_E Queue::enqueue_to_front(const void *const pv_item_to_queue,
+                                  delay_t wait_time) {
   auto ret_val =
       xQueueSendToFront(m_pHandle, pv_item_to_queue, pdMS_TO_TICKS(wait_time));
   return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
 }
 
-void Queue::place_item_at_front_blocked(const void *const pv_item_to_queue) {
-  (void)place_item_at_front(pv_item_to_queue, wait_forever);
+void Queue::enqueue_to_front(const void *const pv_item_to_queue) {
+  (void)enqueue_to_front(pv_item_to_queue, wait_forever);
 }
 
-RET_STA_E Queue::place_item_at_back(const void *const pv_item_to_queue,
-                                    delay_t wait_time) {
+RET_STA_E Queue::enqueue(const void *const pv_item_to_queue,
+                         delay_t wait_time) {
   auto ret_val =
       xQueueSendToBack(m_pHandle, pv_item_to_queue, pdMS_TO_TICKS(wait_time));
   return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
 }
 
-void Queue::place_item_at_back_blocked(const void *const pv_item_to_queue) {
-  (void)place_item_at_back(pv_item_to_queue, wait_forever);
+void Queue::enqueue(const void *const pv_item_to_queue) {
+  (void)enqueue(pv_item_to_queue, wait_forever);
 }
 
-RET_STA_E Queue::get_item(void *const pv_buffer, delay_t wait_time) {
+RET_STA_E Queue::dequeue(void *const pv_buffer, delay_t wait_time) {
   auto ret_val = xQueueReceive(m_pHandle, pv_buffer, pdMS_TO_TICKS(wait_time));
   return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
 }
 
-void Queue::get_item_blocked(void *const pv_buffer) {
-  (void)get_item(pv_buffer, pdMS_TO_TICKS(wait_forever));
+void Queue::dequeue(void *const pv_buffer) {
+  (void)dequeue(pv_buffer, pdMS_TO_TICKS(wait_forever));
 }
 
-RET_STA_E Queue::look_at_item(void *const pv_buffer, delay_t wait_time) {
+RET_STA_E Queue::peek(void *const pv_buffer, delay_t wait_time) {
   auto ret_val = xQueuePeek(m_pHandle, pv_buffer, pdMS_TO_TICKS(wait_time));
   return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess : RET_STA_E::eRTOSFailure;
 }
 
-void Queue::look_at_item_blocked(void *const buffer) {
-  (void)look_at_item(buffer, pdMS_TO_TICKS(wait_forever));
+void Queue::peek(void *const buffer) {
+  (void)peek(buffer, pdMS_TO_TICKS(wait_forever));
 }
 
 } // namespace RTOS
