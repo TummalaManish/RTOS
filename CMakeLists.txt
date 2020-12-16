@@ -28,6 +28,9 @@ if (USR_IS_CHILD)
   elseif(CMAKE_BUILD_TYPE STREQUAL "Analysis")
     # TODO: Add analysis configuration.
   # Alternative configuration.
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL
+          "Release")
+    message(STATUS "Building under ${CMAKE_BUILD_TYPE}.")
   else()
     message(FATAL_ERROR "${CMAKE_BUILD_TYPE} is not supported.")
   endif()

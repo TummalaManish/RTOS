@@ -15,7 +15,6 @@
 #include "IQueueReceiver.hpp"
 #include "IQueueSender.hpp"
 
-
 #include "MemoryManager.hpp"
 
 namespace RTOS {
@@ -39,10 +38,7 @@ public:
   /**
    * @brief Construct a new Queue object.
    */
-  TQueue() {
-    m_pHandle = nullptr;
-    m_pQueueCB = nullptr;
-    m_pBuffer = nullptr;
+  TQueue() : m_pHandle(nullptr), m_pQueueCB(nullptr), m_pBuffer(nullptr) {
     if (MemoryManager::get_Instance().get_CB(&m_pQueueCB) ==
             eMemAllocationSuccess &&
         MemoryManager::get_Instance().get_block(
@@ -62,7 +58,7 @@ public:
 
   /*-------------------------- Inherited methods ---------------------------*/
   RET_STA_E enqueue_to_front(const void *const pv_item_to_queue,
-                                delay_t wait_time) override {
+                             delay_t wait_time) override {
     auto ret_val = xQueueSendToFront(m_pHandle, pv_item_to_queue,
                                      pdMS_TO_TICKS(wait_time));
     return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess
@@ -74,7 +70,7 @@ public:
   }
 
   RET_STA_E enqueue(const void *const pv_item_to_queue,
-                               delay_t wait_time) override {
+                    delay_t wait_time) override {
     auto ret_val =
         xQueueSendToBack(m_pHandle, pv_item_to_queue, pdMS_TO_TICKS(wait_time));
     return ret_val == pdTRUE ? RET_STA_E::eRTOSSuccess

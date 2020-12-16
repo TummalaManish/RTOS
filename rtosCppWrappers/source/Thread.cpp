@@ -19,8 +19,45 @@ struct TCB_pass_s {
   stack_t m_pStack;
   stack_size_t m_stackSize;
   priority_t m_threadPrio;
-  char m_threadName[configMAX_TASK_NAME_LEN];
+  char m_threadName[configMAX_TASK_NAME_LEN]{};
+
+  TCB_pass_s() = delete;
+  TCB_pass_s(struct TCB_pass_s const &src)
+      : m_threadPrio(src.m_threadPrio), m_pStack(src.m_pStack),
+        m_stackSize(src.m_stackSize), m_threadName("") {
+    for (auto index = static_cast<uint8_t>(0); index < configMAX_TASK_NAME_LEN;
+         ++index) {
+      if (src.m_threadName[index] != static_cast<char>(0x00)) {
+        m_threadName[index] = src.m_threadName[index];
+      } else {
+        // End of the character reached.
+        m_threadName[index] = static_cast<char>(0x00);
+        break;
+      }
+    }
+  }
+
+  void fill_tcb_from_args(const name_t thread_name,
+                          const priority_t thread_priority,
+                          const stack_size_t thread_stack_size,
+                          size_t* const stack) {
+    m_pStack = stack;
+    m_stackSize = thread_stack_size;
+    m_threadPrio = thread_priority;
+
+    for (size_t index = static_cast<size_t>(0); index < configMAX_TASK_NAME_LEN;
+         ++index) {
+      if (thread_name[index] != static_cast<char>(0x00)) {
+        m_threadName[index] = thread_name[index];
+      } else {
+        // End of the thread-name reached.
+        m_threadName[index] = static_cast<char>(0x00);
+        break;
+      }
+    }
+  }
 };
+
 using TCB_PASS_STR = struct TCB_pass_s;
 
 /*--------- static value initialization ---------*/
@@ -28,32 +65,23 @@ id_t Thread::m_sThreadCount = 0;
 /*----------------------------------------------*/
 
 RTOS::Thread::Thread(const name_t thread_name, const priority_t thread_priority,
-                     const stack_size_t thread_stack_size,
-                     const id_t thread_id) {
-  m_pStack = nullptr;
-  m_pTaskCb = nullptr;
-  m_pHandle = nullptr;
-  bool result =
-      ((MemoryManager::get_Instance().get_CB(&m_pTaskCb) ==
-        eMemoryResult::eMemAllocationSuccess) &&
-       (MemoryManager::get_Instance().get_stack(m_pStack, thread_stack_size) ==
+                     const stack_size_t thread_stack_size, const id_t thread_id)
+    : m_pStack(nullptr), m_pTaskCb(nullptr), m_pHandle(nullptr) {
+  bool result = ((MemoryManager::get_Instance().get_CB(&m_pTaskCb) ==
+                  eMemoryResult::eMemAllocationSuccess));
+  result &=
+      ((MemoryManager::get_Instance().get_stack(m_pStack, thread_stack_size) ==
         eMemoryResult::eMemAllocationSuccess));
 
   if (result) {
     m_threadStatus = THR_STA_E::eThreadNotStarted;
-    auto *block = reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb);
-    block->m_pStack = m_pStack;
-    block->m_threadPrio = thread_priority;
-    block->m_stackSize = thread_stack_size;
-    for (auto index = static_cast<uint8_t>(0); index < configMAX_TASK_NAME_LEN;
-         ++index) {
-      if (thread_name[index] != static_cast<char>(0x00)) {
-        block->m_threadName[index] = thread_name[index];
-      } else {
-        // End of the line reached.
-        break;
-      }
-    }
+
+    // Casting TCB to a intermediate type to pass task parameters.
+    (*(reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb)))
+        .fill_tcb_from_args(thread_name, thread_priority, thread_stack_size,
+                            m_pStack);
+
+    // Thread ID related changes.
     m_sThreadCount++;
     if (thread_id != 0) {
       m_threadId = thread_id;
@@ -63,10 +91,7 @@ RTOS::Thread::Thread(const name_t thread_name, const priority_t thread_priority,
   } else {
 
     m_threadStatus = THR_STA_E::eMemoryAllocationFailed;
-#ifdef DBG_BRK
-    // Have to use te BASE versioned debug interface.
-    debug_break;
-#endif // Ending the DBG_BRK.
+    // TODO: Insert a debug-break if such functionality is required.
   }
 }
 
@@ -81,7 +106,8 @@ Thread::~Thread() {
 
 void Thread::start(void *super) {
   auto *this_obj = static_cast<Thread *>(super);
-  if (this_obj->get_status() == THR_STA_E::eThreadStarted) {
+  if (this_obj->get_status() == THR_STA_E::eThreadNotStarted) {
+    this_obj->m_threadStatus = THR_STA_E::eThreadStarted;
     this_obj->run();
 
     /*--------- Execution should never come here -----------*/
@@ -189,30 +215,13 @@ void Thread::resume() const { vTaskResume(m_pHandle); }
 
 void Thread::join() {
   // Temp Variable to pass the parameters.
-  TCB_PASS_STR block;
-  block.m_threadPrio =
-      (reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb))->m_threadPrio;
-  block.m_pStack = (reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb))->m_pStack;
-  block.m_stackSize =
-      (reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb))->m_stackSize;
-  for (auto index = static_cast<uint8_t>(0); index < configMAX_TASK_NAME_LEN;
-       ++index) {
-    if ((reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb))->m_pStack[index] !=
-        static_cast<char>(0x00)) {
-      block.m_threadName[index] =
-          (reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb))->m_pStack[index];
-    } else {
-      // End of the character reached.
-      block.m_threadName[index] = static_cast<char>(0x00);
-      break;
-    }
-  }
+  TCB_PASS_STR dest(*(reinterpret_cast<TCB_PASS_STR *>(m_pTaskCb)));
 
-  m_pHandle = xTaskCreateStatic(start, block.m_threadName, block.m_stackSize,
-                                (void *const)(this), block.m_threadPrio,
-                                block.m_pStack, m_pTaskCb);
-  if (m_pHandle != nullptr) {
-    m_threadStatus = THR_STA_E::eThreadStarted;
+  m_pHandle = xTaskCreateStatic(start, dest.m_threadName, dest.m_stackSize,
+                                (void *const)(this), dest.m_threadPrio,
+                                dest.m_pStack, m_pTaskCb);
+  if (m_pHandle != nullptr &&
+      m_threadStatus != THR_STA_E::eMemoryAllocationFailed) {
     start_scheduler();
   } else {
     m_threadStatus = THR_STA_E::eThreadCreationFailed;
@@ -252,6 +261,7 @@ RET_STA_E Thread::send_value_with_no_over_write(uint32_t valueToSend) {
   base_t ret_value = xTaskNotify(
       m_pHandle, valueToSend,
       static_cast<eNotifyAction>(NTF_TYP_E::eSetValueWithoutOverwrite));
+
   return ret_value == pdPASS ? RET_STA_E::eRTOSSuccess
                              : RET_STA_E::eRTOSFailure;
 }
@@ -261,12 +271,9 @@ RET_STA_E Thread::thread_delete() { return RET_STA_E::eRTOSSuccess; }
 } // namespace RTOS
 
 extern "C" void
-vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
-                              StackType_t **ppxIdleTaskStackBuffer,
-                              uint32_t *pulIdleTaskStackSize);
-void vApplicationGetIdleTaskMemory(StaticTask_t **const ppxIdleTaskTCBBuffer,
-                                   StackType_t **const ppxIdleTaskStackBuffer,
-                                   uint32_t *const pulIdleTaskStackSize) {
+vApplicationGetIdleTaskMemory(StaticTask_t **const ppxIdleTaskTCBBuffer,
+                              StackType_t **const ppxIdleTaskStackBuffer,
+                              uint32_t *const pulIdleTaskStackSize) {
   constexpr unsigned int stack_size = 50;
   static StaticTask_t l_tcb;
   static StackType_t l_stack[stack_size];
