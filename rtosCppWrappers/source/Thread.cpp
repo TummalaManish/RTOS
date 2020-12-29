@@ -162,7 +162,7 @@ Thread::SIG_RET_VAL Thread::wait_for_signal_on_bits(uint32_t signalMask,
 }
 
 Thread::SIG_RET_VAL
-Thread::wait_for_signal_on_bits_blocked(uint32_t signalMask) {
+Thread::wait_for_signal_on_bits(uint32_t signalMask) {
   return wait_for_signal_on_bits(signalMask, wait_forever);
 }
 
@@ -178,7 +178,7 @@ Thread::NTF_VALUE_S Thread::wait_for_value(delay_t blockTime) {
   return ret_value;
 }
 
-Thread::NTF_VALUE_S Thread::wait_for_value_blocked() {
+Thread::NTF_VALUE_S Thread::wait_for_value() {
   return wait_for_value(wait_forever);
 }
 

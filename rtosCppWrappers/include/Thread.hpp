@@ -20,7 +20,7 @@ namespace RTOS {
  * @brief Enumerates the scheduler status.
  */
 enum class scheduler_status_e {
-  eSchedulerNotRunning = 0,
+  eSchedulerIsNotRunning = 0,
   eSchedulerRunning = 1,
 };
 using SCH_STA_E = scheduler_status_e;
@@ -51,31 +51,7 @@ public:
   };
   using NTF_VALUE_S = struct notify_value;
 
-private:
-  /**
-   * @brief   Thread starter functions that'll be passed into the kernel.
-   */
-  static void start(void *);
-
-  static id_t m_sThreadCount; /**<Holds the count of the threads that have been
-                                 created*/
-  /*---------------- Non Static member variables -------------*/
-  status_e m_threadStatus; /**<Hold the status of the thread. */
-  id_t m_threadId;         /**<Holds the id of the current thread.*/
-  thr_handle_t m_pHandle; /**<Points to the task handle of the created thread.*/
-  stack_t m_pStack;       /**<Points to the stack of the thread created.*/
-  control_block_t m_pTaskCb; /**<Points to the task's control block.*/
-
-public:
   explicit Thread() = delete; /**<Default constructor is deleted.*/
-
-  /**
-   * @brief   Make's a mask with the specified bit set.
-   *
-   * @param   value Any number between 0 and 31.
-   * @return  returns a 32 bit value with the bit specified set.
-   */
-  static uint32_t SIG_BIT(unsigned int value);
 
   /**
    * @brief   Thread constructor.
@@ -106,6 +82,14 @@ public:
    * @return  True if the scheduler is currently running.
    */
   static bool is_scheduler_running();
+
+  /**
+   * @brief   Make's a mask with the specified bit set.
+   *
+   * @param   value Any number between 0 and 31.
+   * @return  returns a 32 bit value with the bit specified set.
+   */
+  static uint32_t SIG_BIT(unsigned int value);
 
   /*---- Methods that are from the IThread interface ----*/
   id_t get_id() const override;
@@ -180,7 +164,7 @@ protected:
    * signal over.
    * @return SIG_RET_VAL  returns one of the possible enum values.
    */
-  static SIG_RET_VAL wait_for_signal_on_bits_blocked(uint32_t signalMask);
+  static SIG_RET_VAL wait_for_signal_on_bits(uint32_t signalMask);
 
   /**
    * @brief   Call to this method blocks the thread for the given time or until
@@ -195,18 +179,33 @@ protected:
    * @brief   Call to this method blocks the thread for the given time or until
    * the value is received i.e forever.
    *
-   *          For this method the NTF_VALUE_S.timed_out is always false as there
+   *          For this method the NTF_VALUE_S.timed_out is always false as there\
    * is no time out.
    *
    * @return  NTF_VALUE_S Returns the value received as a signal.
    */
-  static NTF_VALUE_S wait_for_value_blocked();
+  static NTF_VALUE_S wait_for_value();
 
   /**
    * @brief   thread_run function that all the inherited classes have to
    * implement.
    */
   virtual void run() = 0;
+
+private:
+  /**
+   * @brief   Thread starter functions that'll be passed into the kernel.
+   */
+  static void start(void *);
+
+  static id_t m_sThreadCount; /**<Holds the count of the threads that have been
+                                 created*/
+  /*---------------- Non Static member variables -------------*/
+  status_e m_threadStatus; /**<Hold the status of the thread. */
+  id_t m_threadId;         /**<Holds the id of the current thread.*/
+  thr_handle_t m_pHandle; /**<Points to the task handle of the created thread.*/
+  stack_t m_pStack;       /**<Points to the stack of the thread created.*/
+  control_block_t m_pTaskCb; /**<Points to the task's control block.*/
 };
 } // namespace RTOS
 #endif // RTOS_THREAD_HPP

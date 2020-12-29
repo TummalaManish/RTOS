@@ -1,7 +1,7 @@
 /**
  * @file        ISignal.hpp
  * @author      Tummala Manish (manish.tummala@gmail.com)
- * @brief       Implements the interafce class for the signals.
+ * @brief       Implements the interface class for the signals.
  * @version     0.1
  * @date        2020-09-15
  *
