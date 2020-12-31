@@ -1,6 +1,7 @@
-[submodule "rtos_core"]
-	path = rtos_c/rtos_core
-	url = git@github.com:FreeRTOS/FreeRTOS-Kernel.git
 [submodule "googletest"]
 	path = googletest
 	url = git@github.com:google/googletest.git
+[submodule "rtosC/rtosCore"]
+	path = rtosC/rtosCore
+	url = git@github.com:TummalaManish/FreeRTOS-Kernel.git
+	branch = main

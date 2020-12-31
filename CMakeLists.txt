@@ -8,7 +8,7 @@ if (NOT DEFINED PORT_SELECT)
   add_compile_definitions("SIM")
 endif()
 # This the FreeRTOS kernel.
-add_subdirectory(rtos_c)
+add_subdirectory(rtosC)
 # This is the root directory that builds the core library.
 add_subdirectory(rtosCppWrappers)
 

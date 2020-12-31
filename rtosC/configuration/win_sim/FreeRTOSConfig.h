@@ -94,6 +94,7 @@ extern "C" {
                           one small structure as the real stack is part of the \
                           win32 thread. */
 #define configTOTAL_HEAP_SIZE ((size_t)(24 * 1024))
+#define configInitialSystemTime 0
 #define configMAX_TASK_NAME_LEN (12)
 #define configUSE_TRACE_FACILITY 1
 #define configUSE_16_BIT_TICKS 0
