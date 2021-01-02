@@ -9,26 +9,26 @@
  *
  */
 
-#include "DateTime.hpp"
+#include "DateTimeOS.hpp"
 
-namespace RTOS{
+namespace RTOS {
 
-os_time_t RTOS::DateTime::get_datetime() {
+os_time_t RTOS::DateTimeOS::get_datetime() {
   os_time_t retTime;
   ker_get_datetime(retTime);
   return retTime;
 }
-void RTOS::DateTime::get_datetime(os_time_t &rToHoldTime) {
+void RTOS::DateTimeOS::get_datetime(os_time_t &rToHoldTime) {
   ker_get_datetime(rToHoldTime);
 }
-void RTOS::DateTime::set_datetime(os_time_t &timeToSet) {
+void RTOS::DateTimeOS::set_datetime(os_time_t &timeToSet) {
   ker_set_datetime(timeToSet);
 }
 
-void DateTime::ker_get_datetime (os_time_t &refToDateTime) {
+void DateTimeOS::ker_get_datetime(os_time_t &refToDateTime) {
   vGetSystemTime(&refToDateTime);
 }
-void DateTime::ker_set_datetime(const os_time_t &refToDateTime) {
+void DateTimeOS::ker_set_datetime(const os_time_t &refToDateTime) {
   vSetSystemTime(&refToDateTime);
 }
-}
+} // namespace RTOS

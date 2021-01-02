@@ -8,15 +8,14 @@
  * @copyright Copyright (c) 2020
  *
  */
-#ifndef RTOS_CPP_WRAPPER_DATETIME_HPP
-#define RTOS_CPP_WRAPPER_DATETIME_HPP
+#ifndef RTOS_CPP_WRAPPER_DATETIMEOS_HPP
+#define RTOS_CPP_WRAPPER_DATETIMEOS_HPP
 
-#include "IDateTime.hpp"
+#include "IDateTimeOS.hpp"
 
 namespace RTOS{
 
-class DateTime: public IDateTime{
-  bool timeLock; /*<< Lock for the system time */
+class DateTimeOS : public IDateTimeOS{
 public:
   /*------------------------ Interface for Date time -------------------------*/
   os_time_t get_datetime() override;
@@ -28,4 +27,4 @@ protected:
   static void ker_set_datetime(os_time_t const& refToDateTime);
 };
 }
-#endif // RTOS_CPP_WRAPPER_DATETIME_HPP
+#endif // RTOS_CPP_WRAPPER_DATETIMEOS_HPP

@@ -13,12 +13,11 @@
 
 #include "rtos_types.hpp"
 
+namespace RTOS {
 
-namespace RTOS{
-
-class IDateTime{
+class IDateTimeOS {
 public:
-  virtual ~IDateTime() = default;
+  virtual ~IDateTimeOS() = default;
 
   /**
    * @brief returns os time in ms.
@@ -30,15 +29,15 @@ public:
    * @brief passes out the os time in ms.
    * @param rToHoldTime reference to variable to hold time.
    */
-  virtual void get_datetime(os_time_t & rToHoldTime) = 0;
+  virtual void get_datetime(os_time_t &rToHoldTime) = 0;
 
   /**
    * @brief sets the os time to the specified value.
    * @param timeToSet new time to be set to system clock.
    * @return true if the adjustment is successfully else false.
    */
-  virtual void set_datetime(os_time_t & timeToSet) = 0;
+  virtual void set_datetime(os_time_t &timeToSet) = 0;
 };
-}
+} // namespace RTOS
 
 #endif // RTOS_CPP_WRAPPER_IDATETIME_H
