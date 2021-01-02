@@ -11,21 +11,21 @@
 #ifndef RTOS_CPP_WRAPPER_OSTIME_HPP
 #define RTOS_CPP_WRAPPER_OSTIME_HPP
 
-#include "IOSTime.hpp"
+#include "rtos_types.hpp"
 
 namespace RTOS{
 
 /**
  * @brief Date time class to retrive date and time of the system.
  */
-class DateTimeOS : public IOSTime {
+class OSTime {
 public:
-  /*------------------------ Interface for Date time -------------------------*/
-  os_time_t get_ostime() override;
-  void get_ostime(os_time_t &rToHoldTime) override;
-  void set_ostime(os_time_t &timeToSet) override;
 
-protected:
+  static os_time_t get_ostime() override;
+  static void get_ostime(os_time_t &rToHoldTime);
+  static void set_ostime(os_time_t &timeToSet);
+
+private:
   static void ker_get_ostime(os_time_t & refToDateTime);
   static void ker_set_ostime(os_time_t const& refToDateTime);
 };

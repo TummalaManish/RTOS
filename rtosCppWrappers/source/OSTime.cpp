@@ -13,22 +13,22 @@
 
 namespace RTOS {
 
-os_time_t RTOS::DateTimeOS::get_ostime() {
+os_time_t RTOS::OSTime::get_ostime() {
   os_time_t retTime;
   ker_get_ostime(retTime);
   return retTime;
 }
-void RTOS::DateTimeOS::get_ostime(os_time_t &rToHoldTime) {
+void RTOS::OSTime::get_ostime(os_time_t &rToHoldTime) {
   ker_get_ostime(rToHoldTime);
 }
-void RTOS::DateTimeOS::set_ostime(os_time_t &timeToSet) {
+void RTOS::OSTime::set_ostime(os_time_t &timeToSet) {
   ker_set_ostime(timeToSet);
 }
 
-void DateTimeOS::ker_get_ostime(os_time_t &refToDateTime) {
+void OSTime::ker_get_ostime(os_time_t &refToDateTime) {
   vGetSystemTime(&refToDateTime);
 }
-void DateTimeOS::ker_set_ostime(const os_time_t &refToDateTime) {
+void OSTime::ker_set_ostime(const os_time_t &refToDateTime) {
   vSetSystemTime(&refToDateTime);
 }
 } // namespace RTOS
