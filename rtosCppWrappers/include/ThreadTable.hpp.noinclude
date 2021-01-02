@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef RTOS_CPP_WRAPPER_THREADTABLE_HPP
-#define RTOS_CPP_WRAPPER_THREADTABLE_HPP
+#ifndef RTOS_CPP_WRAPPER_THREADTABLE_HPP_NOINCLUDE
+#define RTOS_CPP_WRAPPER_THREADTABLE_HPP_NOINCLUDE
 
 #include <IThread.hpp>
 
@@ -22,7 +22,7 @@ namespace RTOS {
 
 /**
  * @brief   This is also a singleton object. It holds the thread table that help
- * in accessing diffrent threads. Note: Still this feature is under
+ * in accessing different threads. Note: Still this feature is under
  * consideration.
  */
 class ThreadTable {
@@ -47,4 +47,4 @@ public:
   thread_table_thread_count_t get_thread_count();
 }
 } // namespace RTOS
-#endif // RTOS_CPP_WRAPPER_THREADTABLE_HPP
+#endif // RTOS_CPP_WRAPPER_THREADTABLE_HPP_NOINCLUDE
