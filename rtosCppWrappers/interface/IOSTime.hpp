@@ -15,28 +15,28 @@
 
 namespace RTOS {
 
-class IDateTimeOS {
+class IOSTime {
 public:
-  virtual ~IDateTimeOS() = default;
+  virtual ~IOSTime() = default;
 
   /**
    * @brief returns os time in ms.
    * @return os_time_t returns time in ms since scheduler has started.
    */
-  virtual os_time_t get_datetime() = 0;
+  virtual os_time_t get_ostime() = 0;
 
   /**
    * @brief passes out the os time in ms.
    * @param rToHoldTime reference to variable to hold time.
    */
-  virtual void get_datetime(os_time_t &rToHoldTime) = 0;
+  virtual void get_ostime(os_time_t &rToHoldTime) = 0;
 
   /**
    * @brief sets the os time to the specified value.
    * @param timeToSet new time to be set to system clock.
    * @return true if the adjustment is successfully else false.
    */
-  virtual void set_datetime(os_time_t &timeToSet) = 0;
+  virtual void set_ostime(os_time_t &timeToSet) = 0;
 };
 } // namespace RTOS
 
