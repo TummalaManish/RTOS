@@ -112,5 +112,12 @@ using RET_STA_E = return_status_e;
 using que_handle_t = QueueHandle_t;
 
 using queue_cb_t = StaticQueue_t *;
+/*----------------------------------------------------------------------------*/
+
+/*---------------------------- Queue definitions -----------------------------*/
+/**
+ * @brief time since epoch in ms.
+ */
+using os_time_t = TimeType_t;
 } // namespace RTOS
 #endif // Closing RTOS_TYPES_HPP.
