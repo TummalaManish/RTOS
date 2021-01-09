@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 add_library(kernel rtosCore/list.c
         rtosCore/tasks.c rtosCore/queue.c
-        rtosCore/portable/MemMang/heap_4.c)
+        rtosCore/portable/MemMang/heap_4.c
+        configuration/Assert_call/rtosAssert.cpp)
 
 if(${PORT_SELECT} STREQUAL "WIN_SIM")
     target_sources(kernel PRIVATE rtosCore/portable/MSVC-MingW/port.c)

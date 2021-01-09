@@ -160,10 +160,10 @@ functions anyway. */
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */
-#define configASSERT(x)                                                        \
-  if ((x) == 0){                                                                \
-    printf("ASSERT: %s : %d\n", __FILE__, (int)__LINE__);                        \
-    while (1);                                                                   \
+extern void RTOS_ASSERT(char const* file, unsigned int const line);
+#define configASSERT(x) \
+  if ((x) == 0){        \
+    RTOS_ASSERT(__FILE__, (unsigned int )__LINE__); \
 }
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
