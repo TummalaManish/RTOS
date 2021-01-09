@@ -21,7 +21,7 @@ namespace RTOS{
 class OSTime {
 public:
 
-  static os_time_t get_ostime() override;
+  static os_time_t get_ostime();
   static void get_ostime(os_time_t &rToHoldTime);
   static void set_ostime(os_time_t &timeToSet);
 
