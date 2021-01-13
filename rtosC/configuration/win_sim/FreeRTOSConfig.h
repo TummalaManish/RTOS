@@ -165,7 +165,6 @@ extern void RTOS_ASSERT(char const* file, unsigned int const line);
   if ((x) == 0){        \
     RTOS_ASSERT(__FILE__, (unsigned int )__LINE__); \
 }
-
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #define TRACE_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
 #define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
