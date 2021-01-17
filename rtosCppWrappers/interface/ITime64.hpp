@@ -17,6 +17,16 @@ namespace RTOS {
 
 class ITime64 {
 public:
+
+  /*------------------------ 64-bit time constant ----------------------------*/
+  static uint32_t const MS_IN_SEC  = 1000;
+  static uint32_t const SEC_IN_MIN = 60;
+  static uint32_t const MS_IN_MIN  = SEC_IN_MIN * MS_IN_SEC;
+  static uint32_t const MIN_IN_HR  = 60;
+  static uint32_t const MS_IN_HR   = MIN_IN_HR * MS_IN_MIN;
+  static uint32_t const HRS_IN_DAY = 24;
+  static uint32_t const MS_IN_DAY  = 24 * MS_IN_HR;
+
   virtual ~ITime64() = default;
 
   /**
