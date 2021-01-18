@@ -24,7 +24,7 @@ public:
   /*----------------- Interface Implementation for the ITime64 ---------------*/
   os_time_t get_time64() const override;
   void get_time64(os_time_t &msSinceEpoch) const override;
-  void set_time64(os_time_t &msSinceEpoch) const override;
+  void set_time64(os_time_t const &msSinceEpoch) override;
 };
 } // namespace RTOS
 
