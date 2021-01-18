@@ -23,7 +23,7 @@ void Time64::get_time64(os_time_t &msSinceEpoch) const {
   vGetSystemTime(&msSinceEpoch);
 }
 
-void Time64::set_time64(os_time_t &msSinceEpoch) const {
+void Time64::set_time64(os_time_t const &msSinceEpoch) {
   vSetSystemTime(&msSinceEpoch);
 }
 } // namespace RTOS

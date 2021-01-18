@@ -45,7 +45,7 @@ public:
    * @brief Sets 64-bit system time.
    * @param msSinceEpoch[in] new timeti be set as s system time.
    */
-  virtual void set_time64(RTOS::os_time_t &msSinceEpoch) const = 0;
+  virtual void set_time64(os_time_t const &msSinceEpoch) = 0;
 
   /* NOTE: Should we have some api that'll check the validity go the time? */
 };
