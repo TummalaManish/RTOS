@@ -4,8 +4,10 @@ project(RTOS_CPP_WRAPPER VERSION 0.0.0 LANGUAGES CXX C ASM)
 
 enable_testing()
 if(NOT DEFINED GOOGLETEST_VERSION)
+  if (CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
   add_subdirectory(googletest)
   include(GoogleTest)
+  endif()
 endif()
 
 # Selecting windows simulator for un-specified configurations.
