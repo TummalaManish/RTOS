@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(RTOS_CPP_WRAPPER VERSION 0.0.0 LANGUAGES CXX C ASM)
 
 enable_testing()
-if(NOT DEFINED GOOGLETEST_VERSION)
+if(NOT TARGET gtest)
   if (CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
   add_subdirectory(googletest)
   include(GoogleTest)
