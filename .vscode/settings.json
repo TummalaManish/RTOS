@@ -50,7 +50,7 @@
   //     "SUPPORT/toolSupportFiles/cppcheck/cpp_misra.json"
   // ],
   // CMAKE CONFIGURATION.
-  "cmake.buildDirectory": "${workspaceFolder}/0_Build/vscode",
+  "cmake.buildDirectory": "${workspaceFolder}/0_Build/${buildType}",
   "cmake.configureOnOpen": false,
   // CMake defines.
   "cmake.configureArgs": [

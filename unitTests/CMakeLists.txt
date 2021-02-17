@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-file(GLOB_RECURSE SRC_FILES "*.cpp" "*.hpp")
-set(USR_LCL_INC_FLS "${CMAKE_CURRENT_SOURCE_DIR}/mocks")
-set(USR_LCL_LIB_FLS obj_kernel)
-
-addSrcToTestRunner(SRC_FILES USR_LCL_LIB_FLS USR_LCL_INC_FLS)
-# End of cmake-file.
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
+add_executable(rtosUnitTestExe 
+                    ThreadUnit.cpp
+                    MemoryManagerUnit.cpp)
+target_include_directories(rtosUnitTestExe PUBLIC mocks)
+target_link_libraries(rtosUnitTestExe PUBLIC  obj_kernel 
+                                              gtest
+                                              gmock
+                                              gtest_main
+                                              gmock_main)
+gtest_discover_tests(rtosUnitTestExe)
+endif()
+# End of cmake-file.s
