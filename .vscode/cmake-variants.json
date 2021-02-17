@@ -6,15 +6,6 @@
             "short": "Debug",
             "long": "Emit debug information without performing optimizations.",
             "buildType": "Debug"
-          },
-          "UnitTest": {
-              "short": "Unit Test",
-              "long": "Runs all the unit tests in the project.",
-              "buildType": "UnitTest",
-              "settings":{
-                "USR_SUPP_DIR:STRING" :  "${workspaceFolder}/SUPPORT",
-                "CMAKE_CXX_FLAGS" : "-g -O0"
-              }
           } 
         }
     }
