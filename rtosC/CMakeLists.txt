@@ -30,4 +30,17 @@ elseif(${PORT_SELECT} STREQUAL "IAR_M3")
             configuration/IAR_M3
             rtosCore/include/
             rtosCore/portable/IAR/ARM_CM3/)
+
+elseif(${PORT_SELECT} STREQUAL "IAR_M4F")
+    target_sources(kernel PRIVATE rtosCore/portable/IAR/ARM_CM4F/port.c
+            rtosCore/portable/IAR/ARM_CM4F/portasm.s)
+    target_include_directories(kernel PUBLIC
+            configuration/IAR_M4F
+            rtosCore/include/
+            rtosCore/portable/IAR/ARM_CM4F/)
+    target_include_directories(rtos_core_interface INTERFACE
+            configuration/IAR_M4F
+            rtosCore/include/
+            rtosCore/portable/IAR/ARM_CM4F/)
+
 endif()
