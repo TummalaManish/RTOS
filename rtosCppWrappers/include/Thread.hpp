@@ -110,7 +110,6 @@ public:
   RET_STA_E send_value_with_no_over_write(uint32_t valueToSend) override;
   RET_STA_E notify(notify_value_t, NTF_TYP_E) override;
 
-protected:
   /**
    * @brief   Yields the thread from execution.
    */
@@ -179,13 +178,14 @@ protected:
    * @brief   Call to this method blocks the thread for the given time or until
    * the value is received i.e forever.
    *
-   *          For this method the NTF_VALUE_S.timed_out is always false as there\
-   * is no time out.
+   *          For this method the NTF_VALUE_S.timed_out is always false as
+   * there\ is no time out.
    *
    * @return  NTF_VALUE_S Returns the value received as a signal.
    */
   static NTF_VALUE_S wait_for_value();
 
+protected:
   /**
    * @brief   thread_run function that all the inherited classes have to
    * implement.
