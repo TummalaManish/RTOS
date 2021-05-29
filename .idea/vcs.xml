@@ -4,6 +4,5 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/googletest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/rtosC/rtosCore" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/rtos_c/rtos_core" vcs="Git" />
   </component>
 </project>

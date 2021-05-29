@@ -17,6 +17,7 @@
 #include "FreeRTOS.h"
 
 #include "event_groups.h"
+#include "semphr.h"
 #include "portmacro.h"
 #include "queue.h"
 #include "stream_buffer.h"
