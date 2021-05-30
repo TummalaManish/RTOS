@@ -19,7 +19,7 @@
 // RTOS includes
 #include "IMutex.hpp"
 
-namespace NEST_TEST {
+namespace NEST_TESTS {
 
 class MockMutex : public RTOS::IMutex {
 public:
@@ -30,6 +30,6 @@ public:
   MOCK_METHOD(bool, remove, (), (override));
   MOCK_METHOD(bool, is_mutex_created, (), (const, override));
 };
-} // namespace NEST_TEST
+} // namespace NEST_TESTS
 
 #endif // RTOS_CPP_WRAPPER_MOCKMUTEX_HPP
