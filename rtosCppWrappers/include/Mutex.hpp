@@ -34,7 +34,7 @@ public:
   bool lock() override;
   bool unlock() override;
   bool remove() override;
-  bool is_mutex_created() override;
+  bool is_mutex_created() const override;
 };
 }
 
