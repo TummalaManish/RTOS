@@ -63,6 +63,6 @@ bool Mutex::remove() {
   return (holder != nullptr);
 }
 
-bool Mutex::is_mutex_created() { return m_isMutexCreated; }
+bool Mutex::is_mutex_created() const { return m_isMutexCreated; }
 
 } // namespace RTOS

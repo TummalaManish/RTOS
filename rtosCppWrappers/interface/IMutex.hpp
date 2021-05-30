@@ -57,9 +57,9 @@ public:
    * @brief Checks if the mutex is created if not it has to be created.
    * @return true if the mutex if created else false.
    */
-  virtual bool is_mutex_created() = 0;
+  virtual bool is_mutex_created() const = 0;
   /*TODO: This interface will be extended further in the future.*/
 };
-}
+} // namespace RTOS
 
 #endif // RTOS_CPP_WRAPPER_IMUTEX_HPP
