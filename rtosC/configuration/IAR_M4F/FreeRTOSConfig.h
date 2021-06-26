@@ -104,7 +104,7 @@ extern "C" {
 #define configUSE_MALLOC_FAILED_HOOK			1
 #define configUSE_APPLICATION_TASK_TAG			1
 #define configUSE_COUNTING_SEMAPHORES			1
-#define configUSE_QUEUE_SETS					1
+#define configUSE_QUEUE_SETS					0
 #define configUSE_TASK_NOTIFICATIONS			1
 #define configSUPPORT_STATIC_ALLOCATION         1
 #define configAPPLICATION_ALLOCATED_HEAP        0
@@ -154,6 +154,8 @@ functions anyway. */
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xSemaphoreGetMutexHolder		1
 #define INCLUDE_xTimerPendFunctionCall			1
+
+#include "SEGGER_SYSVIEW_FreeRTOS.h"
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */

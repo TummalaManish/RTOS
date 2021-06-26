@@ -19,6 +19,10 @@ if (PORT_SELECT STREQUAL "WIN_SIM")
   add_compile_definitions("SIM")
 endif()
 
+# Support Libraries
+add_subdirectory(SEGGER/RTT)
+add_subdirectory(SEGGER/SYS_VIEW)
+
 # This the FreeRTOS kernel.
 add_subdirectory(rtosC)
 # This is the root directory that builds the core library.

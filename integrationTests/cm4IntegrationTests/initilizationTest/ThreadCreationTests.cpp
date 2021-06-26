@@ -22,6 +22,10 @@ class test_thr1 : public RTOS::Thread {
   void run() override {
     for (;;) {
       // std::cout << "running thread number" << value_of_thread << std::endl;
+      size_t value = UINT16_MAX;
+      while (value) {
+        value--;
+      }
       Thread::delay_ms(500);
     }
   }
@@ -45,8 +49,13 @@ class main_thread : public RTOS::Thread {
     }
     delay_ms(500);
 
-    // std::cout << "Ending the test.";
-    // end_scheduler();
+    for (;;) {
+      size_t value = UINT16_MAX;
+      while (value) {
+        value--;
+      }
+      Thread::delay_ms(500);
+    }
   }
 
   RTOS::return_status_e thread_delete() override {
@@ -63,12 +72,11 @@ private:
   uint8_t thread_count;
 };
 
+test_thr1 threads[4] = {test_thr1(1), test_thr1(2), test_thr1(3), test_thr1(4)};
+main_thread main_th(threads, 4);
+
 int main() {
-
-  test_thr1 threads[4] = {test_thr1(1), test_thr1(2), test_thr1(3),
-                          test_thr1(4)};
-
-  main_thread main_th(threads, 4);
+  traceSTART();
   main_th.join();
   return 0;
 }

@@ -13,11 +13,8 @@ list(APPEND CMAKE_ASM_FLAGS "--cpu Cortex-M4F --fpu VFPv4_sp --thumb")
 
 set(PORT_SELECT "IAR_M4F")
 
-# Adding the RTOS Library.
-# This the FreeRTOS kernel.
-add_subdirectory(../../rtosC rtosC)
-# This is the root directory that builds the core library.
-add_subdirectory(../../rtosCppWrappers rtosCPP)
+# Adding entire RTOS Layer.
+add_subdirectory(../.. 2_RTOS)
 
 # Each test is added as a sperate executable in a sub directory.
 add_subdirectory(initilizationTest)
