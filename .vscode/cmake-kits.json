@@ -1,0 +1,10 @@
+[
+    {
+        "name": "WindowsSim",
+        "toolchainFile": "${workspaceFolder}/SUPPORT/toolChainFiles/Win/toolchain-win.cmake"
+    },
+    {
+        "name": "IAR-CM3",
+        "toolchainFile": "${workspaceFolder}/SUPPORT/toolChainFiles/IAR/toolchain-ewarm.cmake"
+    }
+]
