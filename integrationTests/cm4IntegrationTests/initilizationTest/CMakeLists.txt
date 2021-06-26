@@ -5,7 +5,10 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} --config \
 ${CMAKE_CURRENT_SOURCE_DIR}/linkerConfiguration/app_linker_script.icf")
 
-add_executable(InitilizationTest ThreadCreationTests.cpp)
+add_executable(InitilizationTest ThreadCreationTests.cpp
+startup_stm32f401xc.s
+system_stm32f4xx.c)
+
 target_link_libraries(InitilizationTest obj_kernel)
 
 # End of cmake-file.

@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
+add_subdirectory(sysviewFreeRTOSConf)
+
 add_library(kernel rtosCore/list.c
         rtosCore/tasks.c rtosCore/queue.c
         rtosCore/portable/MemMang/heap_4.c
         configuration/Assert_call/rtosAssert.cpp)
+
+target_link_libraries(kernel PUBLIC SYSVIEW_FreeRTOS_Specifics)
 
 add_library(rtos_core_interface INTERFACE)
 
