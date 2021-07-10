@@ -13,3 +13,5 @@ TODO: 2 All the task block status have to be addeed here.
 ✔ Decoupling the thread and signal interafces. @started(20-09-15 11:57) @done(20-09-15 15:44) @lasted(3h47m36s)
 ☐ Have to start working on events in the RTOS.
 ✔ Implemeting templated queue design. @started(20-09-26 03:01) @done(20-09-27 09:09) @lasted(1d6h8m34s)
+✔ Completed SEGGER RTT and SystemView integration @done(21-07-10 10:55)
+☐ Implement in application SystemView control component and expand for application instrumentation.
