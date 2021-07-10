@@ -9,17 +9,9 @@
  *
  */
 
-#include <iostream>
+#include <stdio.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-[[noreturn]] void RTOS_ASSERT(char const* file, unsigned int const line){
+void RTOS_ASSERT(char const* file, unsigned int const line){
   printf("RTOS ASSERT: %s : %d\n", file, (int)line);                        \
   while (1);
 }
-
-#ifdef __cplusplus
-}
-#endif

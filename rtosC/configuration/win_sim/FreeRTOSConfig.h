@@ -106,7 +106,7 @@ extern "C" {
 #define configUSE_MALLOC_FAILED_HOOK 1
 #define configUSE_APPLICATION_TASK_TAG 1
 #define configUSE_COUNTING_SEMAPHORES 1
-#define configUSE_QUEUE_SETS 1
+#define configUSE_QUEUE_SETS 0
 #define configUSE_TASK_NOTIFICATIONS 1
 #define configSUPPORT_STATIC_ALLOCATION 1
 #define configAPPLICATION_ALLOCATED_HEAP 0
@@ -122,7 +122,7 @@ extern "C" {
 ///* Run time stats gathering configuration options. */
 // unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that
 // returns run time counter. */ #define configGENERATE_RUN_TIME_STATS
-//1
+// 1
 ///* Make use of times(man 2) to gather run-time statistics on the tasks. */
 // extern void vPortFindTicksPerSecond( void );
 //#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vPortFindTicksPerSecond()
@@ -158,14 +158,17 @@ functions anyway. */
 #define INCLUDE_xSemaphoreGetMutexHolder 1
 #define INCLUDE_xTimerPendFunctionCall 1
 
+#if SYSTEM_VIEW_ANALYSIS == 1
+#include "SEGGER_SYSVIEW_FreeRTOS.h"
+#endif
+
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */
-extern void RTOS_ASSERT(char const* file, unsigned int const line);
-#define configASSERT(x) \
-  if ((x) == 0){        \
-    RTOS_ASSERT(__FILE__, (unsigned int )__LINE__); \
+extern void RTOS_ASSERT(char const *file, unsigned int const line);
+#define configASSERT(x)                                                        \
+  if ((x) == 0) {                                                              \
+    RTOS_ASSERT(__FILE__, (unsigned int)__LINE__);                             \
   }
-
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #define TRACE_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
 #define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()

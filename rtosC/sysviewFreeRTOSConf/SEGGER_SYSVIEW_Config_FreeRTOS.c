@@ -56,6 +56,14 @@ Revision: $Rev: 7745 $
 
 extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
 
+
+/**
+ * @note: For windows simulator cpu clock is not defined hence setting it to a modest cpu frequency for the simulation to be accurate.
+ */
+#ifndef configCPU_CLOCK_HZ
+#define configCPU_CLOCK_HZ 84000000
+#endif
+
 /*********************************************************************
 *
 *       Defines, configurable
@@ -63,10 +71,18 @@ extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
 **********************************************************************
 */
 // The application name to be displayed in SystemViewer
-#define SYSVIEW_APP_NAME        "FreeRTOS Demo Application"
+#ifdef SYSTEM_VIEW_APP_NAME
+#define SYSVIEW_APP_NAME        SYSTEM_VIEW_APP_NAME
+#else
+#define SYSVIEW_APP_NAME        "NEST Platform"
+#endif
 
 // The target device name
-#define SYSVIEW_DEVICE_NAME     "Cortex-M4F"
+#ifdef SYSTEM_VIEW_DEVICE_NAME
+#define SYSVIEW_DEVICE_NAME     SYSTEM_VIEW_DEVICE_NAME
+#else
+#define SYSVIEW_DEVICE_NAME     "Generic Device"
+#endif
 
 // Frequency of the timestamp. Must match SEGGER_SYSVIEW_GET_TIMESTAMP in SEGGER_SYSVIEW_Conf.h
 #define SYSVIEW_TIMESTAMP_FREQ  (configCPU_CLOCK_HZ)
