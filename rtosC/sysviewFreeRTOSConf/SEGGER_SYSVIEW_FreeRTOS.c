@@ -249,4 +249,19 @@ const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI = {
   _cbSendTaskList,
 };
 
+/**
+ * @note: These are custom application provided system calls for systemview.
+ */
+#if defined(WIN32) || defined(SEGGER_RTT_LOCK_EMBOS)
+
+uint32_t SEGGER_SYSVIEW_X_GetTimestamp() {
+  uint64_t systemtime;
+  vGetSystemTime(&systemtime);
+  return (uint32_t)systemtime;
+}
+
+uint32_t SEGGER_SYSVIEW_X_GetInterruptId() {
+  return 10;
+}
+#endif
 /*************************** End of file ****************************/

@@ -67,7 +67,6 @@
     1 tab == 4 spaces!
 */
 
-
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -85,81 +84,87 @@ extern "C" {
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *----------------------------------------------------------*/
 
-#define configUSE_PREEMPTION					1
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION	0
-#define configUSE_IDLE_HOOK						0
-#define configUSE_TICK_HOOK						0
-#define configCPU_CLOCK_HZ			            ( ( unsigned long ) 72000000 )
-#define configTICK_RATE_HZ						( 1000 )
-#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 50 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 14 * 1024 ) )
-#define configMAX_TASK_NAME_LEN					( 12 )
-#define configUSE_TRACE_FACILITY				1
-#define configUSE_16_BIT_TICKS					0
-#define configIDLE_SHOULD_YIELD					1
-#define configUSE_MUTEXES						1
-#define configCHECK_FOR_STACK_OVERFLOW			0
-#define configUSE_RECURSIVE_MUTEXES				1
-#define configQUEUE_REGISTRY_SIZE				20
-#define configUSE_MALLOC_FAILED_HOOK			1
-#define configUSE_APPLICATION_TASK_TAG			1
-#define configUSE_COUNTING_SEMAPHORES			1
-#define configUSE_QUEUE_SETS					0
-#define configUSE_TASK_NOTIFICATIONS			1
-#define configSUPPORT_STATIC_ALLOCATION         1
-#define configAPPLICATION_ALLOCATED_HEAP        0
+#define configUSE_PREEMPTION 1
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+#define configUSE_IDLE_HOOK 0
+#define configUSE_TICK_HOOK 0
+#define configCPU_CLOCK_HZ ((unsigned long)72000000)
+#define configTICK_RATE_HZ (1000)
+#define configMINIMAL_STACK_SIZE                                               \
+  ((unsigned short)50) /* In this simulated case, the stack only has to hold   \
+                          one small structure as the real stack is part of the \
+                          win32 thread. */
+#define configTOTAL_HEAP_SIZE ((size_t)(14 * 1024))
+#define configMAX_TASK_NAME_LEN (12)
+#define configUSE_TRACE_FACILITY 1
+#define configUSE_16_BIT_TICKS 0
+#define configIDLE_SHOULD_YIELD 1
+#define configUSE_MUTEXES 1
+#define configCHECK_FOR_STACK_OVERFLOW 0
+#define configUSE_RECURSIVE_MUTEXES 1
+#define configQUEUE_REGISTRY_SIZE 20
+#define configUSE_MALLOC_FAILED_HOOK 1
+#define configUSE_APPLICATION_TASK_TAG 1
+#define configUSE_COUNTING_SEMAPHORES 1
+#define configUSE_QUEUE_SETS 0
+#define configUSE_TASK_NOTIFICATIONS 1
+#define configSUPPORT_STATIC_ALLOCATION 1
+#define configAPPLICATION_ALLOCATED_HEAP 0
 
 /* Software timer related configuration options. */
-#define configUSE_TIMERS						0
-#define configTIMER_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
-#define configTIMER_QUEUE_LENGTH				20
-#define configTIMER_TASK_STACK_DEPTH			( configMINIMAL_STACK_SIZE * 2 )
+#define configUSE_TIMERS 0
+#define configTIMER_TASK_PRIORITY (configMAX_PRIORITIES - 1)
+#define configTIMER_QUEUE_LENGTH 20
+#define configTIMER_TASK_STACK_DEPTH (configMINIMAL_STACK_SIZE * 2)
 
-#define configMAX_PRIORITIES					( 7 )
+#define configMAX_PRIORITIES (7)
 
 ///* Run time stats gathering configuration options. */
-//unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
-//#define configGENERATE_RUN_TIME_STATS			1
+// unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that
+// returns run time counter. */ #define configGENERATE_RUN_TIME_STATS
+//1
 ///* Make use of times(man 2) to gather run-time statistics on the tasks. */
-//extern void vPortFindTicksPerSecond( void );
+// extern void vPortFindTicksPerSecond( void );
 //#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vPortFindTicksPerSecond()
-//extern unsigned long ulPortGetTimerValue( void );
+// extern unsigned long ulPortGetTimerValue( void );
 //#define portGET_RUN_TIME_COUNTER_VALUE() ulPortGetTimerValue()
 
 /* Co-routine related configuration options. */
-#define configUSE_CO_ROUTINES 					1
-#define configMAX_CO_ROUTINE_PRIORITIES			( 2 )
+#define configUSE_CO_ROUTINES 1
+#define configMAX_CO_ROUTINE_PRIORITIES (2)
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS 1
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function.  In most cases the linker will remove unused
 functions anyway. */
-#define INCLUDE_vTaskPrioritySet				1
-#define INCLUDE_uxTaskPriorityGet				1
-#define INCLUDE_vTaskDelete						1
-#define INCLUDE_vTaskCleanUpResources			0
-#define INCLUDE_vTaskSuspend					1
-#define INCLUDE_vTaskDelayUntil					1
-#define INCLUDE_vTaskDelay						1
-#define INCLUDE_uxTaskGetStackHighWaterMark		1
-#define INCLUDE_xTaskGetSchedulerState			1
-#define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
-#define INCLUDE_xTaskGetIdleTaskHandle			1
-#define INCLUDE_pcTaskGetTaskName				1
-#define INCLUDE_eTaskGetState					1
-#define INCLUDE_xSemaphoreGetMutexHolder		1
-#define INCLUDE_xTimerPendFunctionCall			1
+#define INCLUDE_vTaskPrioritySet 1
+#define INCLUDE_uxTaskPriorityGet 1
+#define INCLUDE_vTaskDelete 1
+#define INCLUDE_vTaskCleanUpResources 0
+#define INCLUDE_vTaskSuspend 1
+#define INCLUDE_vTaskDelayUntil 1
+#define INCLUDE_vTaskDelay 1
+#define INCLUDE_uxTaskGetStackHighWaterMark 1
+#define INCLUDE_xTaskGetSchedulerState 1
+#define INCLUDE_xTimerGetTimerDaemonTaskHandle 1
+#define INCLUDE_xTaskGetIdleTaskHandle 1
+#define INCLUDE_pcTaskGetTaskName 1
+#define INCLUDE_eTaskGetState 1
+#define INCLUDE_xSemaphoreGetMutexHolder 1
+#define INCLUDE_xTimerPendFunctionCall 1
 
+#if SYSTEM_VIEW_ANALYSIS == 1
 #include "SEGGER_SYSVIEW_FreeRTOS.h"
+#endif
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */
-//void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
+// void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
 //#define configASSERT( x ) if( ( x ) == 0 ) ;
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
@@ -169,21 +174,20 @@ uses the same semantics as the standard C assert() macro. */
 
 /* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
 (lowest) to 0 (1?) (highest). */
-#define configKERNEL_INTERRUPT_PRIORITY 		255
+#define configKERNEL_INTERRUPT_PRIORITY 255
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	191 /* equivalent to 0xb0, or priority 11. */
-
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY                                   \
+  191 /* equivalent to 0xb0, or priority 11. */
 
 /* This is the value being used as per the ST library which permits 16
 priority values, 0 to 15.  This must correspond to the
 configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
 NVIC value of 255. */
-#define configLIBRARY_KERNEL_INTERRUPT_PRIORITY	15
+#define configLIBRARY_KERNEL_INTERRUPT_PRIORITY 15
 
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /* FREERTOS_CONFIG_H */
