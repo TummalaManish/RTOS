@@ -21,10 +21,11 @@ namespace RTOS {
 enum class status_e {
   eNoStatus = 0,
   eMemoryAllocationFailed = 1,
-  eBlockedByChoice = 2,
-  eThreadNotStarted = 4,
-  eThreadStarted = 8,
-  eThreadCreationFailed = 9,
+  eNotStarted = 2,
+  eStarted = 4,
+  eSuspended = 8,
+  eCompleted = 16,
+  eCreationFailed = 32,
   // Note: All the status have to be less than eInvalidStatus.
   eInvalidStatus,
 };
@@ -56,14 +57,14 @@ public:
    * @return  rtos_return_status_e eRTOSSuccess if thread stopped else
    * eRTOSFailure.
    */
-  virtual void suspend() const = 0;
+  virtual void suspend() = 0;
 
   /**
    * @brief Resumes the suspend task.
    *
    * @return rtos_return_status_e
    */
-  virtual void resume() const = 0;
+  virtual void resume() = 0;
 
   /**
    * @brief   Get the thread priority.
