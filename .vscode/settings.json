@@ -51,8 +51,8 @@
   //     "SUPPORT/toolSupportFiles/cppcheck/cpp_misra.json"
   // ],
   // CMAKE CONFIGURATION.
-  "cmake.buildDirectory": "${workspaceFolder}/0_Build/${buildType}",
-  // "cmake.buildDirectory": "${workspaceFolder}/0_Build/${buildType}",          "cmake.sourceDirectory": "${workspaceFolder}/integrationTests/cm4IntegrationTests/",
+  // "cmake.buildDirectory": "${workspaceFolder}/0_Build/${buildType}",
+  "cmake.buildDirectory": "${workspaceFolder}/0_Build/${buildType}",          "cmake.sourceDirectory": "${workspaceFolder}/integrationTests/cm4IntegrationTests/",
   "cmake.configureOnOpen": false,
   // CMake defines.
   "cmake.configureArgs": [

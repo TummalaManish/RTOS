@@ -97,8 +97,8 @@ public:
   return_status_e set_priority(priority_t) override;
   char const *get_name() const override;
   status_e get_status() const override;
-  void suspend() const override;
-  void resume() const override;
+  void suspend() override;
+  void resume() override;
   bool is_thread_created() const override;
   void join() override;
   // This is a simple default implementation inheriting class have to override.
